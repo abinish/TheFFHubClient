@@ -17,13 +17,13 @@ export default function PlayoffMachineMatchupRow( {matchup}: IPlayoffMachineRowP
     
     
     const  handleMatchup = (matchup: IMatchupItem, awayTeamWon: boolean, tie: boolean, homeTeamWon: boolean) => {
-        if(matchup.awayTeamWon && awayTeamWon || matchup.tie && tie || matchup.homeTeamWon && homeTeamWon)
+        if((matchup.awayTeamWon && awayTeamWon) || (matchup.tie && tie) || (matchup.homeTeamWon && homeTeamWon))
             return;
 
         var isDivisionalGame = leagueData.leagueData?.leagueSettings.divisions.some((division) => {
-            return division.teams.some((team) => team.teamName == matchup.awayTeamName)
+            return division.teams.some((team) => team.teamName === matchup.awayTeamName)
             &&
-            division.teams.some((team) => team.teamName == matchup.homeTeamName)
+            division.teams.some((team) => team.teamName === matchup.homeTeamName)
         });
 
         var homeTeam = leagueData.leagueData?.teams.find((team) => team.teamName === matchup.homeTeamName)!;

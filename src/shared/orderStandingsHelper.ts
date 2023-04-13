@@ -40,7 +40,7 @@ export const orderStandings = (league: ILeagueDetails) => {
     //Remove division winners from overall ranks
     unrankedTeams = unrankedTeams.filter((team) => {
         return divisionWinners.findIndex((eachTeam) =>{
-            return eachTeam.teamName == team.teamName;
+            return eachTeam.teamName === team.teamName;
         }) < 0;
     });
 
@@ -63,7 +63,7 @@ const sortTeams = (teams: ITeam[], site: Site, tiebreakerId: PlayoffTiebreakerID
 
     while(sortedTeams.length > 0){
         var topTeams = sortedTeams.filter((team) => {
-            return team.winPercentage == sortedTeams[0].winPercentage;
+            return team.winPercentage === sortedTeams[0].winPercentage;
         });
 
         //Loop through all until all of the tiebreakers are resolved
@@ -81,7 +81,7 @@ const sortTeams = (teams: ITeam[], site: Site, tiebreakerId: PlayoffTiebreakerID
                 sortedTeams.splice(index, 1);
 
             //Remove from tiebreaking teams
-            var index = topTeams.indexOf(topTeam);
+            index = topTeams.indexOf(topTeam);
             if(index > -1)
                 topTeams.splice(index, 1);
 

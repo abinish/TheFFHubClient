@@ -21,8 +21,8 @@ export function LandingPageContainer() {
 		}
 		//fetchData();
 		 const league: ILeagueMetadata = {
-			site: "espn",
-			leagueId: "23007934",
+			site: "sleeper",
+			leagueId: "784516758580166656",
 			swid: "",
 			s2: "",
 			userId: "",
@@ -45,7 +45,7 @@ export function LandingPageContainer() {
 	};
 
 	const deleteLeague = (league: ILeagueMetadata) => {
-		var updatedLeagues = leagues.filter(item => item.site != league.site || item.leagueId != league.leagueId);
+		var updatedLeagues = leagues.filter(item => item.site !== league.site || item.leagueId !== league.leagueId);
 		setLeagues(updatedLeagues);
 	}
 

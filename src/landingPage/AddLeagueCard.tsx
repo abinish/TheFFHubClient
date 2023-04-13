@@ -21,19 +21,19 @@ export default function AddLeagueCard() {
     
 	const [selectedSite, setSelectedSite] = React.useState(Site.ESPN);
 
-    const showYahooAuthentication = selectedSite == Site.Yahoo;
+    const showYahooAuthentication = selectedSite === Site.Yahoo;
 
     const addLeagueButtonDisabled = !leagueToAdd.name || !leagueToAdd.leagueId;
 
     const siteUrlImage = () => {
-        if(selectedSite == Site.ESPN){
-            return <img src="/espnurl.PNG" alt="image" />
+        if(selectedSite === Site.ESPN){
+            return <img src="/espnurl.PNG" alt="espn url" />
         }
-        if(selectedSite == Site.Yahoo){
-            return <img src="/yahooUrl.PNG" alt="image" />
+        if(selectedSite === Site.Yahoo){
+            return <img src="/yahooUrl.PNG" alt="yahoo url" />
         }
-        if(selectedSite == Site.Sleeper){
-            return <img src="/sleeperUrl.png" alt="image" />
+        if(selectedSite === Site.Sleeper){
+            return <img src="/sleeperUrl.png" alt="sleeper url" />
         }
         return <span></span>;
     }

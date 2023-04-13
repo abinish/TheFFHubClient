@@ -2,7 +2,7 @@ import { ILeagueDetails } from "../models";
 import { IPowerRankingTeam } from "./models";
 
 export const getTeam = (teamName: string, teams: IPowerRankingTeam[]) : IPowerRankingTeam => {
-    return teams.find(team => team.teamName == teamName)!;
+    return teams.find(team => team.teamName === teamName)!;
 }
 export const getPowerRankingTeams = (league: ILeagueDetails): IPowerRankingTeam[] | null => {
     if (league == null){

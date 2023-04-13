@@ -33,8 +33,8 @@ export function PlayoffMachineContainer() {
                 swid: searchParams.get('swid') || "",
                 s2: searchParams.get('s2') || ""
             });
-            var index = leagues.leagueData.findIndex((l) => l.leagueId == searchParams.get('leagueId') && l.site == searchParams.get('site'));
-            if(index == -1){
+            var index = leagues.leagueData.findIndex((l) => l.leagueId === searchParams.get('leagueId') && l.site === searchParams.get('site'));
+            if(index === -1){
                 var updatedLeagues = [...leagues.leagueData, league]
                 leagues.setLeagueData(updatedLeagues);
             }else{
