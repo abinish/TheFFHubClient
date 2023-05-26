@@ -11,6 +11,9 @@ import NavBar from './shared/navBar';
 import { LeagueDataContext } from './Contexts/LeagueDataContexts';
 import { PowerRankingsContainer } from './powerRankings/PowerRankingsContainer';
 import { PlayoffMachineContainer } from './playoffMachine/PlayoffMachineContainer';
+import { Container } from 'react-bootstrap';
+import { MaintenanceContainer } from './maintenance/MaintenanceContainer';
+import { ScheduleComparisonContainer } from './scheduleComparison/ScheduleComparisonContainer';
 
 function App() {
 
@@ -18,14 +21,19 @@ function App() {
 
   return (
     <CookiesProvider>
+      
       <LeagueDataContext.Provider value={{leagueData, setLeagueData}}>
         <BrowserRouter>
           <NavBar/>
-            <Routes>
-              <Route path='/PlayoffMachine' element={<PlayoffMachineContainer/>} />
-              <Route path='/PowerRankings' element={<PowerRankingsContainer/>} />
-              <Route path='/' element={<LandingPageContainer/>} />
-            </Routes>
+          <Container fluid="true" style={{margin:'4rem', marginTop:'0rem'}}>
+              <Routes>
+                <Route path='/PlayoffMachine' element={<PlayoffMachineContainer/>} />
+                <Route path='/PowerRankings' element={<PowerRankingsContainer/>} />
+                <Route path='/ScheduleComparison' element={<ScheduleComparisonContainer/>} />
+                <Route path='/landing' element={<LandingPageContainer/>} />
+                <Route path='/' element={<MaintenanceContainer/>} />
+              </Routes>
+          </Container>
         </BrowserRouter>
       </LeagueDataContext.Provider>
     </CookiesProvider>

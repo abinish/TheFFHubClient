@@ -3,14 +3,27 @@ import { IDivision, ITeam } from '../models';
 import PlayoffMachineDivisionRow from './PlayoffMachineDivisionRow';
 
 export interface IPlayoffMachineTableProps {
-	division: IDivision | null;
+    division: IDivision | null;
+	teams: ITeam[] | null;
+    playoffTeams: number;
 }
 
 export default function PlayoffMachineDivision({
-	division
+    division,
+	teams,
+    playoffTeams
 }: IPlayoffMachineTableProps) {
+
+    const getIsPlayoffTeam = (team: ITeam, playoffTeams: number) => {
+        if(team.overallRank <= playoffTeams)
+            return true;
+
+        return false;
+    }
+
 	return (
 		<div>
+            <h4>{division?.name}</h4>
             <table className="table">
                 <thead>
                     <tr>
@@ -21,7 +34,7 @@ export default function PlayoffMachineDivision({
                     </tr>
                 </thead>
                 <tbody>
-                    {division?.teams?.sort((a,b) => a.overallRank < b.overallRank? 1 : -1).map(t => <PlayoffMachineDivisionRow key={t.teamName} team={t} />)}
+                    {teams?.sort((a,b) => a.overallRank > b.overallRank? 1 : -1).map(t => <PlayoffMachineDivisionRow key={t.teamName} team={t} isPlayoffTeam={getIsPlayoffTeam(t, playoffTeams)} />)}
                 </tbody>
             </table>	
 		</div>

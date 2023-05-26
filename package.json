@@ -35,8 +35,9 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
+    "test:debug": "react-scripts --inspect-brk test --runInBand --no-cache",
     "eject": "react-scripts eject",
-    "deploy": "aws s3 sync build s3://ffhub && aws cloudfront create-invalidation --distribution-id E3G76GBFZOVVV4 --paths \"/*\" --no-cli-pager"
+    "deploy": "aws s3 sync build s3://ffhub && aws cloudfront create-invalidation --distribution-id ESBWERKM23HVY --paths \"/*\" --no-cli-pager"
   },
   "eslintConfig": {
     "extends": [

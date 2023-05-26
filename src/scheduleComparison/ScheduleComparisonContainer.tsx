@@ -1,17 +1,17 @@
 import * as React from 'react';
-import { useParams } from 'react-router';
-import { ILeagueDetails, ILeagueMetadata } from '../models';
-import { IPowerRankingTeam } from './models';
-import PowerRankingsTable from './PowerRankingsTable';
-import { getPowerRankingTeams } from './PowerRankingsHelper';
+import { ILeagueDetails } from '../models';
+import { IScheduleComparisonTeam } from './models';
+import ScheduleComparisonTable from './ScheduleComparisonTable';
 import { getLeagueDetails } from '../leagueApi';
 import { LeagueDataContext } from '../Contexts/LeagueDataContexts';
 import update from 'immutability-helper'
 import { useSearchParams } from 'react-router-dom';
 import { Loading } from '../shared/loading';
+import { getScheduleComparisonTeams } from './ScheduleComparisonHelper';
+import WeeklyRecordTable from './WeeklyRecordTable';
 
 
-export function PowerRankingsContainer(){ 
+export function ScheduleComparisonContainer(){ 
 
 	//const history = useHistory();
 	// const listUrl = React.useMemo(() => pathname.substring(0, pathname.lastIndexOf('/')), [pathname]);
@@ -20,14 +20,15 @@ export function PowerRankingsContainer(){
 	// 	const optionalAreaId = Number(query?.a);
 	// 	return isNaN(optionalAreaId) ? null : optionalAreaId;
 	// }, [search]);
-	const [powerRankingTeams, setPowerRankingTeams] = React.useState<IPowerRankingTeam[]>();
+	const [scheduleComparisonTeams, setScheduleComparisonTeams] = React.useState<IScheduleComparisonTeam[]>();
+	const [leagueData, setLeagueData] = React.useState<ILeagueDetails>();
 
 
 	const leagues = React.useContext(LeagueDataContext);
 
 	const [searchParams] = useSearchParams();
 
-	const loading = powerRankingTeams === undefined;
+	const loading = scheduleComparisonTeams === undefined;
 
 	React.useEffect(() => {
 		const fetchData = async () => {
@@ -46,13 +47,16 @@ export function PowerRankingsContainer(){
 				const updatedLeagues = update(leagues.leagueData, {$splice: [[index, 1, league]]});
 				leagues.setLeagueData(updatedLeagues);
 			}
-			var teams = getPowerRankingTeams(league);
+            setLeagueData(league);
+
+			var teams = getScheduleComparisonTeams(league);
 			if(teams)
-				setPowerRankingTeams(teams);
+                setScheduleComparisonTeams(teams);
 
 		}
 		fetchData();
 	}, []);
+
 
 	if (loading) {
 	    return <Loading />;
@@ -60,7 +64,15 @@ export function PowerRankingsContainer(){
 	 //   return <ErrorView />;
 	//}
 	return (
-		<PowerRankingsTable Teams={powerRankingTeams} />
+        <div>
+            <h4>Schedule Comparisons</h4>
+
+            <ScheduleComparisonTable teams={scheduleComparisonTeams} completedWeeks={leagueData?.completedSchedule ?? []} />
+
+            <br/><br/>
+            <h4>Weekly Record vs All Teams</h4>
+            <WeeklyRecordTable teams={scheduleComparisonTeams} completedWeeks={leagueData?.completedSchedule ?? []}/>
+        </div>
 	);
 
 }

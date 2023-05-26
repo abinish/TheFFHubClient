@@ -20,7 +20,7 @@ export const orderStandings = (league: ILeagueDetails) => {
     })
 
     for (let index = 0; index < league.teams.length; index++) {
-        ranksRemaining.push(index);
+        ranksRemaining.push(index+1);
     }
 
     league.teams.forEach(team => {
@@ -106,7 +106,7 @@ const setTeamRanking = (remainingRankings: number[], sortedTeams: ITeam[]) => {
     while (sortedTeams.length > 0) {
         var team = sortedTeams.shift()
         if(team)
-            team.overallRank = remainingRankings.shift() || 100;
+            team.overallRank = remainingRankings.shift() ?? 100;
     }
 }
 

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ILeagueDetails, ILeagueMetadata } from '../models';
+import { IDivision, ILeagueDetails, ILeagueMetadata, ITeam } from '../models';
 import { IPowerRankingTeam } from '../powerRankings/models';
 import { LeagueDataContext } from '../Contexts/LeagueDataContexts';
 import { useSearchParams } from 'react-router-dom';
@@ -8,8 +8,9 @@ import update from 'immutability-helper'
 import { PlayoffMachineContext } from '../Contexts/PlayoffMachineContexts';
 import PlayoffMachineDivision from './PlayoffMachineDivision';
 import PlayoffMachineMatchupWeek from './PlayoffMachineMatchupWeek';
-import { Tab, Tabs } from 'react-bootstrap';
+import { Container, Tab, Tabs } from 'react-bootstrap';
 import { orderStandings } from '../shared/orderStandingsHelper';
+import { Loading } from '../shared/loading';
 
 export function PlayoffMachineContainer() { 
 	//const history = useHistory();
@@ -23,6 +24,7 @@ export function PlayoffMachineContainer() {
     const [leagueData, setLeagueData] = React.useState<ILeagueDetails>();
     const [tabValue, setTabValue] = React.useState(0);
     const [searchParams] = useSearchParams();
+    const loading = leagueData === undefined;
 
     React.useEffect(() => {
         const fetchData = async () => {
@@ -49,24 +51,28 @@ export function PlayoffMachineContainer() {
         fetchData();
     }, []);
 
+    function getTeamsFromDivision(division: IDivision): ITeam[] {
+        //Get all teams from LeagueData.teams where they are in the division
+        return leagueData?.teams.filter(t => t.division === division.name) || [];
+    }
+
     const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
         setTabValue(newValue);
     }
-	// if (loading) {
-	// 	return <LoadingView />;
-	// } else if (hasError) { 
-	// 	return <ErrorView />;
-	// }
+	if (loading) {
+	    return <Loading />;
+	} //else if (hasError) { 
+	 //   return <ErrorView />;
+	//}
 
 
 
 	return <PlayoffMachineContext.Provider value={{leagueData, setLeagueData}}>
-            <div>
-                {leagueData?.leagueSettings.divisions.map(d => <PlayoffMachineDivision key={d.name} division={d} /> )}
-
-            </div>
-            <Tabs id="test" className="mb-3" fill>
-                {leagueData?.remainingSchedule.map((w, index) => <Tab key={w.week} eventKey={w.week} title={"Week " + w.week}  ><PlayoffMachineMatchupWeek week={w}/> </Tab>)}
-            </Tabs>
+                <div style={{display:'flex'}}>
+                    {leagueData?.leagueSettings.divisions.map((d,index) => <div key={index} style={{flex: 1, paddingRight:'1rem'}}><PlayoffMachineDivision key={d.name} division={d} teams={getTeamsFromDivision(d)} playoffTeams={leagueData.leagueSettings.playoffTeams}/></div> )}
+                </div>
+                <Tabs id="test" className="mb-3" fill>
+                    {leagueData?.remainingSchedule.map((w, index) => <Tab key={index} eventKey={w.week} title={"Week " + w.week}  ><PlayoffMachineMatchupWeek week={w}/> </Tab>)}
+                </Tabs>
         </PlayoffMachineContext.Provider>;
 }

@@ -1,17 +1,16 @@
 import * as React from 'react';
-import { useParams } from 'react-router';
-import { ILeagueDetails, ILeagueMetadata } from '../models';
-import { IPowerRankingTeam } from './models';
-import PowerRankingsTable from './PowerRankingsTable';
-import { getPowerRankingTeams } from './PowerRankingsHelper';
+import { ILeagueDetails } from '../models';
+import { IPlayoffOddsTeam } from './models';
+import PlayoffOddsTable from './PlayoffOddsTable';
 import { getLeagueDetails } from '../leagueApi';
 import { LeagueDataContext } from '../Contexts/LeagueDataContexts';
 import update from 'immutability-helper'
 import { useSearchParams } from 'react-router-dom';
 import { Loading } from '../shared/loading';
+import { getPlayoffOddsTeams } from './PlayoffOddsHelper';
 
 
-export function PowerRankingsContainer(){ 
+export function PlayoffOddsContainer(){ 
 
 	//const history = useHistory();
 	// const listUrl = React.useMemo(() => pathname.substring(0, pathname.lastIndexOf('/')), [pathname]);
@@ -20,14 +19,15 @@ export function PowerRankingsContainer(){
 	// 	const optionalAreaId = Number(query?.a);
 	// 	return isNaN(optionalAreaId) ? null : optionalAreaId;
 	// }, [search]);
-	const [powerRankingTeams, setPowerRankingTeams] = React.useState<IPowerRankingTeam[]>();
+	const [playoffOddsTeams, setPlayoffOddsTeams] = React.useState<IPlayoffOddsTeam[]>();
+	const [leagueData, setLeagueData] = React.useState<ILeagueDetails>();
 
 
 	const leagues = React.useContext(LeagueDataContext);
 
 	const [searchParams] = useSearchParams();
 
-	const loading = powerRankingTeams === undefined;
+	const loading = playoffOddsTeams === undefined;
 
 	React.useEffect(() => {
 		const fetchData = async () => {
@@ -46,9 +46,11 @@ export function PowerRankingsContainer(){
 				const updatedLeagues = update(leagues.leagueData, {$splice: [[index, 1, league]]});
 				leagues.setLeagueData(updatedLeagues);
 			}
-			var teams = getPowerRankingTeams(league);
+            setLeagueData(league);
+
+			var teams = getPlayoffOddsTeams(league);
 			if(teams)
-				setPowerRankingTeams(teams);
+                setPlayoffOddsTeams(teams);
 
 		}
 		fetchData();
@@ -60,7 +62,7 @@ export function PowerRankingsContainer(){
 	 //   return <ErrorView />;
 	//}
 	return (
-		<PowerRankingsTable Teams={powerRankingTeams} />
+		<PlayoffOddsTable teams={playoffOddsTeams} playoffTeams={leagueData?.leagueSettings.playoffTeams || 0} />
 	);
 
 }
