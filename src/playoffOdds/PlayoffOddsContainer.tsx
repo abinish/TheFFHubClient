@@ -48,7 +48,7 @@ export function PlayoffOddsContainer(){
 			}
             setLeagueData(league);
 
-			var teams = getPlayoffOddsTeams(league);
+			var teams = getPlayoffOddsTeams(league, 10000);
 			if(teams)
                 setPlayoffOddsTeams(teams);
 

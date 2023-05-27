@@ -3,7 +3,7 @@ import React from 'react';
 import './oldCss/bootstrap.css'
 import './oldCss/FFHub.css'
 */
-import { ILeagueDetails, ILeagueSettings } from './models';
+import { ILeagueDetails } from './models';
 import { LandingPageContainer } from './landingPage/LandingPageContainer';
 import { CookiesProvider } from 'react-cookie';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
@@ -14,6 +14,7 @@ import { PlayoffMachineContainer } from './playoffMachine/PlayoffMachineContaine
 import { Container } from 'react-bootstrap';
 import { MaintenanceContainer } from './maintenance/MaintenanceContainer';
 import { ScheduleComparisonContainer } from './scheduleComparison/ScheduleComparisonContainer';
+import { PlayoffOddsContainer } from './playoffOdds/PlayoffOddsContainer';
 
 function App() {
 
@@ -30,6 +31,7 @@ function App() {
                 <Route path='/PlayoffMachine' element={<PlayoffMachineContainer/>} />
                 <Route path='/PowerRankings' element={<PowerRankingsContainer/>} />
                 <Route path='/ScheduleComparison' element={<ScheduleComparisonContainer/>} />
+                <Route path='/PlayoffOdds' element={<PlayoffOddsContainer/>} />
                 <Route path='/landing' element={<LandingPageContainer/>} />
                 <Route path='/' element={<MaintenanceContainer/>} />
               </Routes>

@@ -1,8 +1,3 @@
-import * as React from 'react';
-import { ITeam } from '../models';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faInfo } from '@fortawesome/free-solid-svg-icons';
-import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 import { IScheduleComparisonTeam, IComparisonRecord } from './models';
 import './ScheduleComparisonRow.css'
 

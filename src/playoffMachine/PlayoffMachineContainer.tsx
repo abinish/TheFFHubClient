@@ -1,6 +1,5 @@
 import * as React from 'react';
-import { IDivision, ILeagueDetails, ILeagueMetadata, ITeam } from '../models';
-import { IPowerRankingTeam } from '../powerRankings/models';
+import { IDivision, ILeagueDetails, ITeam } from '../models';
 import { LeagueDataContext } from '../Contexts/LeagueDataContexts';
 import { useSearchParams } from 'react-router-dom';
 import { getLeagueDetails } from '../leagueApi';
@@ -8,7 +7,7 @@ import update from 'immutability-helper'
 import { PlayoffMachineContext } from '../Contexts/PlayoffMachineContexts';
 import PlayoffMachineDivision from './PlayoffMachineDivision';
 import PlayoffMachineMatchupWeek from './PlayoffMachineMatchupWeek';
-import { Container, Tab, Tabs } from 'react-bootstrap';
+import { Tab, Tabs } from 'react-bootstrap';
 import { orderStandings } from '../shared/orderStandingsHelper';
 import { Loading } from '../shared/loading';
 

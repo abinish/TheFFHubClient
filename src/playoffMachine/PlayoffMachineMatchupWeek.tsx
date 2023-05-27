@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ITeam, IWeek } from '../models';
+import { IWeek } from '../models';
 import PlayoffMachineMatchupRow from './PlayoffMachineMatchupRow';
 
 export interface IPlayoffMachineMatchupWeekProps {

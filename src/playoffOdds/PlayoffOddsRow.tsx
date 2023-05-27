@@ -8,7 +8,7 @@ export interface IPlayoffOddsRowProps {
 
 export default function PlayoffOddsRow( {team, playoffTeams}: IPlayoffOddsRowProps) {
 
-    const totalPlayoffPercentage = team.simulatedPlacements.slice(0, playoffTeams-1).reduce((a, b) => a + b)
+    const totalPlayoffPercentage = team.simulatedPlacements.slice(0, playoffTeams-1).reduce((a, b) => a + b, 0)
 
     const getStyle = (position: number) => {
         if(position <= playoffTeams)

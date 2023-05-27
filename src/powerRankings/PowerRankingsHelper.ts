@@ -9,7 +9,7 @@ export const getPowerRankingTeams = (league: ILeagueDetails): IPowerRankingTeam[
         return null;
     }
 
-    var teams = league.leagueSettings.divisions.flatMap(division => division.teams.map(team => (<IPowerRankingTeam>{  ...team, expectedWins: 0, expectedLosses: 0, powerRankingsScore: 0 } )));
+    var teams = league.leagueSettings.divisions.flatMap(division => division.teams.map(team => ({  ...team, expectedWins: 0, expectedLosses: 0, powerRankingsScore: 0 } as IPowerRankingTeam)));
     var totalPoints = 0;
     var totalGames = 0;
 

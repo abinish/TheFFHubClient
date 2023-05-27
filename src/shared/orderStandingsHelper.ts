@@ -92,9 +92,9 @@ const sortTeams = (teams: ITeam[], site: Site, tiebreakerId: PlayoffTiebreakerID
     
         if(temp){
             //Remove from teams
-            var index = sortedTeams.indexOf(temp);
-            if(index > -1)
-                sortedTeams.splice(index, 1);
+            var sortedTeamIndex = sortedTeams.indexOf(temp);
+            if(sortedTeamIndex > -1)
+                sortedTeams.splice(sortedTeamIndex, 1);
 
             orderedTeams.push(temp);
         }
@@ -112,7 +112,7 @@ const setTeamRanking = (remainingRankings: number[], sortedTeams: ITeam[]) => {
 
 const determineDivisionWinner = (sortedTeams: ITeam[], site: Site, tiebreakerId: PlayoffTiebreakerID, allMatchups: IMatchupItem[] ) : ITeam | undefined => {
     var topTeams = sortedTeams.filter((team) => {
-        return team.winPercentage == sortedTeams[0].winPercentage;
+        return team.winPercentage === sortedTeams[0].winPercentage;
     });
 
     if(topTeams.length === 1)
@@ -121,7 +121,7 @@ const determineDivisionWinner = (sortedTeams: ITeam[], site: Site, tiebreakerId:
     var tiebreaker = generateTiebreakerObject(topTeams);
 
     //Yahoo does intra division for division winner firs then normal
-    if(site == Site.Yahoo){
+    if(site === Site.Yahoo){
         var winner = intraDivisionTiebreaker(topTeams, tiebreaker);
         if(winner)
             return winner;
@@ -132,14 +132,14 @@ const determineDivisionWinner = (sortedTeams: ITeam[], site: Site, tiebreakerId:
 }
 
 const determineTieBreakersWinner = (sortedTeams: ITeam[], site: Site, tiebreaker: string[], tiebreakerId: PlayoffTiebreakerID, allMatchups: IMatchupItem[]) : ITeam | undefined => {
-    if(site == Site.Yahoo){
+    if(site === Site.Yahoo){
         var winner = pointsForTiebreaker(sortedTeams, tiebreaker);
         if(winner)
             return winner;
 
         //Fuck the other tiebreaker, I don't want to calculate it. Let it fallback to coin flip
-    }else if(site == Site.Sleeper){
-        var winner = pointsForTiebreaker(sortedTeams, tiebreaker);
+    }else if(site === Site.Sleeper){
+        winner = pointsForTiebreaker(sortedTeams, tiebreaker);
         if(winner)
             return winner;
 
@@ -149,8 +149,8 @@ const determineTieBreakersWinner = (sortedTeams: ITeam[], site: Site, tiebreaker
 
         //Fallback to coin flip
     }else{
-        if(tiebreakerId == PlayoffTiebreakerID.HeadToHead){
-            var winner = headToHeadTiebreaker(sortedTeams, site,  tiebreaker, tiebreakerId, allMatchups);
+        if(tiebreakerId === PlayoffTiebreakerID.HeadToHead){
+            winner = headToHeadTiebreaker(sortedTeams, site,  tiebreaker, tiebreakerId, allMatchups);
             if(winner)
                 return winner;
 
@@ -167,8 +167,8 @@ const determineTieBreakersWinner = (sortedTeams: ITeam[], site: Site, tiebreaker
                 return winner;
             
             //Nobody wins, fallback to randomish
-        }else if(tiebreakerId == PlayoffTiebreakerID.TotalPointsScored){
-            var winner = pointsForTiebreaker(sortedTeams,  tiebreaker);
+        }else if(tiebreakerId === PlayoffTiebreakerID.TotalPointsScored){
+            winner = pointsForTiebreaker(sortedTeams,  tiebreaker);
             if(winner)
                 return winner;
 
@@ -185,8 +185,8 @@ const determineTieBreakersWinner = (sortedTeams: ITeam[], site: Site, tiebreaker
                 return winner;
             
             //Nobody wins, fallback to randomish
-        }else if(tiebreakerId == PlayoffTiebreakerID.IntraDivisionRecord){
-            var winner = intraDivisionTiebreaker(sortedTeams, tiebreaker);
+        }else if(tiebreakerId === PlayoffTiebreakerID.IntraDivisionRecord){
+            winner = intraDivisionTiebreaker(sortedTeams, tiebreaker);
             if(winner)
                 return winner;
             
@@ -203,8 +203,8 @@ const determineTieBreakersWinner = (sortedTeams: ITeam[], site: Site, tiebreaker
                 return winner;
             
             //Nobody wins, fallback to randomish
-        }else if(tiebreakerId == PlayoffTiebreakerID.TotalPointsAgainst){
-            var winner = pointsAgainstTiebreaker(sortedTeams, tiebreaker);
+        }else if(tiebreakerId === PlayoffTiebreakerID.TotalPointsAgainst){
+            winner = pointsAgainstTiebreaker(sortedTeams, tiebreaker);
             if(winner)
                 return winner;
             
@@ -256,7 +256,7 @@ const headToHeadTiebreaker = (teams: ITeam[], site: Site, tiebreaker: string[], 
         for(var j=0; j<teams.length; j++){
             var matchup = allMatchups[j];
 
-            if(matchup.awayTeamName == selectedTeam.teamName && otherTeams.find((team) => team.teamName == matchup.homeTeamName)){
+            if(matchup.awayTeamName === selectedTeam.teamName && otherTeams.find((team) => team.teamName === matchup.homeTeamName)){
                 if (matchup.awayTeamWon) {
                     teamWins++;
                 } else if (matchup.homeTeamWon) {
@@ -264,7 +264,7 @@ const headToHeadTiebreaker = (teams: ITeam[], site: Site, tiebreaker: string[], 
                 } else if (matchup.tie) {
                     teamTies++;
                 }
-            }else if(matchup.homeTeamName == selectedTeam.teamName && otherTeams.find((team) => team.teamName == matchup.awayTeamName)){
+            }else if(matchup.homeTeamName === selectedTeam.teamName && otherTeams.find((team) => team.teamName === matchup.awayTeamName)){
                 if (matchup.homeTeamWon) {
                     teamWins++;
                 } else if (matchup.awayTeamWon) {
@@ -288,7 +288,7 @@ const headToHeadTiebreaker = (teams: ITeam[], site: Site, tiebreaker: string[], 
     }
     
     var teamsWithMatchingGames = headToHeadTeams.filter((team) => {
-        return team.totalGames == headToHeadTeams[0].totalGames;
+        return team.totalGames === headToHeadTeams[0].totalGames;
     });
 
     //If all teams don't have the same number of games then we can't use head to head
@@ -313,7 +313,7 @@ const headToHeadTiebreaker = (teams: ITeam[], site: Site, tiebreaker: string[], 
             addTiebreakerToTeam(team.team, tiebreaker, "Lost head to head tiebreaker due to multiple teams being " + teamsWithMatchingWinPercentage[0].wins + "-" + teamsWithMatchingWinPercentage[0].losses + "-" + teamsWithMatchingWinPercentage[0].ties + " compared to " + team.wins + "-" + team.losses + "-" + team.ties);
         
             var index = teams.findIndex((eachTeam) => {
-                return team.team.teamName == eachTeam.teamName;
+                return team.team.teamName === eachTeam.teamName;
             });
             if(index > -1)
                 teams.splice(index,1);
@@ -355,7 +355,7 @@ const pointsForTiebreaker = (teams: ITeam[], tiebreaker: string[]) : ITeam | und
     var maxPointsFor = Math.max(...teams.map(t => t.pointsFor));
 
     var teamsWithPointValue = teams.filter((team) =>{
-        return team.pointsFor == maxPointsFor
+        return team.pointsFor === maxPointsFor
     });
 
     if(teamsWithPointValue.length === 1){
@@ -380,7 +380,7 @@ const pointsAgainstTiebreaker = (teams: ITeam[], tiebreaker: string[]) : ITeam |
     var maxPointsAgainst = Math.max(...teams.map(t => t.pointsAgainst));
 
     var teamsWithPointValue = teams.filter((team) =>{
-        return team.pointsAgainst == maxPointsAgainst
+        return team.pointsAgainst === maxPointsAgainst
     });
 
     if(teamsWithPointValue.length === 1){
@@ -408,7 +408,7 @@ const intraDivisionTiebreaker = (teams: ITeam[], tiebreaker: string[]) : ITeam |
     var sortedTeams = sortByDivisionWinPercentage(teams);
     
     var topTeams = sortedTeams.filter((team)=> {
-        return team.divisionWinPercentage == sortedTeams[0].divisionWinPercentage;
+        return team.divisionWinPercentage === sortedTeams[0].divisionWinPercentage;
     });
 
     if(topTeams.length === 1){
@@ -443,13 +443,13 @@ const sortByDivisionWinPercentage = (teams: ITeam[]) : ITeam[] => {
 }
 
 const getSiteFromString = (site: string) : Site => {
-    if(site == "ESPN")
+    if(site === "ESPN")
         return Site.ESPN;
     
-    if (site == "Yahoo")
+    if (site === "Yahoo")
         return Site.Yahoo;
 
-    if (site == "Sleeper")
+    if (site === "Sleeper")
         return Site.Sleeper;
     
     return Site.ESPN;

@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { IScheduleComparisonTeam } from './models';
 import ScheduleComparisonRow from './ScheduleComparisonRow';
 import { IWeek } from '../models';

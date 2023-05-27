@@ -1,6 +1,4 @@
 import * as React from 'react';
-import { useParams } from 'react-router';
-import { ILeagueDetails, ILeagueMetadata } from '../models';
 import { IPowerRankingTeam } from './models';
 import PowerRankingsTable from './PowerRankingsTable';
 import { getPowerRankingTeams } from './PowerRankingsHelper';
