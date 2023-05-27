@@ -46,9 +46,6 @@ const random = () => {
 }
 
 const simluateRestOfSeason = (league: ILeagueDetails, playoffOddsTeams: IPlayoffOddsTeam[]) => {
-
-	//Something is resetting all the ranks
-
 	league.remainingSchedule.forEach(week => {
 		week.matchups.forEach(matchup => {
 			var homeTeam = playoffOddsTeams.find(team => team.teamName === matchup.homeTeamName)!;
@@ -69,9 +66,10 @@ const simluateRestOfSeason = (league: ILeagueDetails, playoffOddsTeams: IPlayoff
 			}else{ //Tie
 				setMatchup(matchup, false, true, false, league, playoffOddsTeams)
 			}
-			orderStandings(league);
 		});
 	});
+
+	orderStandings(league);
 }
 
 const runPlayoffOddsCalculation = (league: ILeagueDetails, teams: IPlayoffOddsTeam[], iterations: number) => {
@@ -87,7 +85,7 @@ const runPlayoffOddsCalculation = (league: ILeagueDetails, teams: IPlayoffOddsTe
 		teams.forEach(team => {
 
 			//Find the team in the league with the same teamName
-			var matchedTeam = teamsToUse.find(t => t.teamName === team.teamName)!;
+			var matchedTeam = leagueToUse.teams.find(t => t.teamName === team.teamName)!;
 			team.simulatedPlacements[matchedTeam.overallRank - 1] += 1.0 / iterations * 100;
 		});
 

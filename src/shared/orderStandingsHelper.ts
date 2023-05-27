@@ -31,11 +31,17 @@ export const orderStandings = (league: ILeagueDetails) => {
     });
 
     //Find divion winners
-    for(var i =0; i < league.leagueSettings.divisions.length; i++){
-        var divisionWinner = determineDivisionWinner(sortByWinPercentage(league.leagueSettings.divisions[i].teams), site, tiebreakerId, allMatchups); 
+    league.leagueSettings.divisions.forEach(division => {
+        var divisionTeams = unrankedTeams.filter((team) => {
+            return division.teams.findIndex((eachTeam) =>{
+                return eachTeam.teamName === team.teamName;
+            }) >= 0;
+        });
+
+        var divisionWinner = determineDivisionWinner(sortByWinPercentage(divisionTeams), site, tiebreakerId, allMatchups); 
         if(divisionWinner)
             divisionWinners.push(divisionWinner);
-    }
+    });
 
     //Remove division winners from overall ranks
     unrankedTeams = unrankedTeams.filter((team) => {

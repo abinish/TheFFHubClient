@@ -60,5 +60,13 @@ describe('testing index file', () => {
     orderStandings(leagueData);
 
     expect(leagueData.teams[0].overallRank).toBe(9);
+    leagueData.teams.forEach(team => {
+      //print team name and rank
+      console.log(team.teamName + ":" + team.overallRank);
+    });
+
+    leagueData.teams.forEach(team => {
+      expect(team.overallRank).toBeGreaterThan(0);
+    });
   });
 });
