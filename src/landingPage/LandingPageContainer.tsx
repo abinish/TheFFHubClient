@@ -28,7 +28,7 @@ export function LandingPageContainer() {
 			userId: "",
 			name: "test"
 		};
-		setLeagues([league]);
+		setLeagues([league, league]);
 	}, []);
 
 
