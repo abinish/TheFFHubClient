@@ -1,0 +1,16 @@
+.matchupButton {
+	width:100%;
+    display: block;
+    text-align:center;
+}
+
+.tiebreakerIcon {
+    padding-left: 5px;
+    display: inline-block;
+}
+
+.tooltip > .tooltip-inner {
+    max-width: 100%;
+  }
+
+  
