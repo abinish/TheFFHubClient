@@ -6,6 +6,7 @@ import { LinkType } from './models'
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Card } from 'react-bootstrap';
+import './Cards.css'
 
 export interface ILeagueCardProps {
     league: ILeagueMetadata;
@@ -20,9 +21,9 @@ export default function LeagueCard( {league}: ILeagueCardProps) {
 	}
 
     return (
-		<Card style={{display:'inline-block'}}>
-			<Card.Header>{league.name}<FontAwesomeIcon icon={faTrash}  aria-hidden="true" style={{float: 'right'}} onClick={() => onDeleteLeague(league)}/></Card.Header>
-			<Card.Body>
+		<Card className='ffHubCard'>
+			<Card.Header>{league.name}<FontAwesomeIcon icon={faTrash}  aria-hidden="true" style={{float: 'right', paddingLeft: '10px'}} onClick={() => onDeleteLeague(league)}/></Card.Header>
+			<Card.Body className='ffHubCardBody'>
 				<Card.Text>
 						<FFHubLink league={league} type={LinkType.PowerRankings}/>
 						<br />

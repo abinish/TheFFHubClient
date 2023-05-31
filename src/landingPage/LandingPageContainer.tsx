@@ -5,49 +5,33 @@ import { ILeagueMetadata } from '../models';
 import LeagueList from './LeagueList';
 import { getLeagues} from '../leagueApi';
 import { LeagueContext } from '../Contexts/LeagueContexts';
+import { Container } from 'react-bootstrap';
 import AddLeagueCard from './AddLeagueCard';
+import { useCookies } from 'react-cookie';
 
 export function LandingPageContainer() {
 	let location = useLocation();
 	const history = useNavigate();
-
-
+	const [cookies, setCookie] = useCookies(['leagues']);
 	const [leagues, setLeagues] = React.useState<ILeagueMetadata[]>([]);
 
 	React.useEffect(() => {
 		const fetchData = async () => {
-			const leagues = await getLeagues();
+			const leagues = await getLeagues(cookies);
 			setLeagues(leagues);
 		}
-		//fetchData();
+		fetchData();
 		 const league: ILeagueMetadata = {
 			site: "sleeper",
 			leagueId: "784516758580166656",
 			swid: "",
 			s2: "",
 			userId: "",
-			name: "test"
+			name: "really really long name that we can't expstect to fit in the card"
 		};
-		setLeagues([league, league]);
+		//setLeagues([league, league]);
 	}, []);
-
-
-	const addLeague = (site: string, leagueId: string, userId: string, swid: string, s2: string, name: string) => {
-		const leagueToAdd: ILeagueMetadata = {	
-			site: site,
-			leagueId: leagueId,
-			name: name,
-			userId: userId,
-			swid: swid,
-			s2: s2
-		};
-		setLeagues([...leagues, leagueToAdd]);
-	};
-
-	const deleteLeague = (league: ILeagueMetadata) => {
-		var updatedLeagues = leagues.filter(item => item.site !== league.site || item.leagueId !== league.leagueId);
-		setLeagues(updatedLeagues);
-	}
+	
 
 	// if (loading) {
 	// 	return <LoadingView />;
@@ -56,8 +40,7 @@ export function LandingPageContainer() {
 	// }
 	return (
 		<LeagueContext.Provider value={{leagues, setLeagues}}>
-			<LeagueList/>
-			<AddLeagueCard/>
+				<LeagueList/>
 		</LeagueContext.Provider>
 	);
 }

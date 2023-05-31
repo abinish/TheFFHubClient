@@ -22,7 +22,6 @@ function App() {
 
   return (
     <CookiesProvider>
-      
       <LeagueDataContext.Provider value={{leagueData, setLeagueData}}>
         <BrowserRouter>
           <NavBar/>

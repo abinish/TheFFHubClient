@@ -17,7 +17,7 @@ export const toolName = (type: LinkType) => {
         case LinkType.PowerRankings:
             return "PowerRankings";
         case LinkType.Scheduler:
-            return "Scheduler";
+            return "ScheduleComparison";
         default:
             return "PlayoffMachine";
     }

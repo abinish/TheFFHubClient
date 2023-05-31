@@ -13,13 +13,25 @@ export async function verifyLeagueExists( parameters: {
     return await response.json() as boolean;
 }
 
-export async function getLeagues() {
-   // const [cookies, setCookie] = useCookies(['leagues'])
-
+export async function getLeagues(cookies: any) {
+    if(cookies.leagues){
+        return cookies.leagues as ILeagueMetadata[];
+    }else{
+        return [];
+    }
 
     const response = await fetch(`https://localhost:44313/Home/leagueMetadata`)
     checkStatus(response);
     return await response.json() as ILeagueMetadata[];
+}
+
+export async function addLeague(leagueData: ILeagueMetadata, cookies: any, setCookie: any) {
+    if(cookies.leagues){
+        setCookie('leagues', [...cookies.leagues, leagueData]);
+    }
+    else{
+        setCookie('leagues', [leagueData]);
+    }
 }
 
 export async function getLeagueDetails( parameters: {

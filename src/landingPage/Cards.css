@@ -1,0 +1,19 @@
+.ffHubCard {
+    display: inline-block;
+    justify-content: flex-start;
+    flex-direction: row;
+    gap: 10px;
+    flex-grow: 0;
+  }
+
+.ffHubDiv {
+    display: flex !important;
+    flex-direction: row;
+    gap: 10px;
+    flex-grow: 0;
+    flex-wrap: wrap;
+  }
+
+.ffHubCardBody {
+    padding-top: 0px !important;
+}
