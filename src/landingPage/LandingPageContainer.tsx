@@ -5,8 +5,6 @@ import { ILeagueMetadata } from '../models';
 import LeagueList from './LeagueList';
 import { getLeagues} from '../leagueApi';
 import { LeagueContext } from '../Contexts/LeagueContexts';
-import { Container } from 'react-bootstrap';
-import AddLeagueCard from './AddLeagueCard';
 import { useCookies } from 'react-cookie';
 import RewriteAlert from './RewriteAlert';
 
