@@ -7,6 +7,8 @@ import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Card } from 'react-bootstrap';
 import './Cards.css'
+import { setLeagues } from '../leagueApi';
+import { useCookies } from 'react-cookie';
 
 export interface ILeagueCardProps {
     league: ILeagueMetadata;
@@ -14,9 +16,13 @@ export interface ILeagueCardProps {
 
 export default function LeagueCard( {league}: ILeagueCardProps) {
 	const leagues = React.useContext(LeagueContext);
+    const [cookies, setCookie] = useCookies(['leagues']);
 
 	const onDeleteLeague = (league: ILeagueMetadata) => {
-		var updatedLeagues = leagues.leagues.filter(item => item.site !== league.site && item.leagueId !== league.leagueId);
+		//remove from leagues where site, leagueId, and name match league
+		
+		var updatedLeagues = leagues.leagues.filter(item => !(item.site === league.site && item.leagueId === league.leagueId && item.name === league.name));
+		setLeagues(updatedLeagues, setCookie);
 		leagues.setLeagues(updatedLeagues);
 	}
 

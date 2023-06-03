@@ -8,6 +8,7 @@ import { LeagueContext } from '../Contexts/LeagueContexts';
 import { Container } from 'react-bootstrap';
 import AddLeagueCard from './AddLeagueCard';
 import { useCookies } from 'react-cookie';
+import RewriteAlert from './RewriteAlert';
 
 export function LandingPageContainer() {
 	let location = useLocation();
@@ -40,6 +41,7 @@ export function LandingPageContainer() {
 	// }
 	return (
 		<LeagueContext.Provider value={{leagues, setLeagues}}>
+				<RewriteAlert/>
 				<LeagueList/>
 		</LeagueContext.Provider>
 	);

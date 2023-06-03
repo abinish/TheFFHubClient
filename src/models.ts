@@ -2,7 +2,7 @@ export interface ILeagueDetails {
     leagueSettings: ILeagueSettings;
     remainingSchedule: IWeek[];
     completedSchedule: IWeek[];
-    totalSchedule: IWeek[];
+    //totalSchedule: IWeek[];
     site: string;
     leagueId: string;
     teams: ITeam[];

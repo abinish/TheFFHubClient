@@ -1,5 +1,4 @@
-import { ILeagueDetails, ILeagueMetadata, Site } from './models'
-import { useCookies } from 'react-cookie';
+import { ILeagueDetails, ILeagueMetadata, Site } from './models';
 
 export async function verifyLeagueExists( parameters: {
     site: string,
@@ -32,6 +31,10 @@ export async function addLeague(leagueData: ILeagueMetadata, cookies: any, setCo
     else{
         setCookie('leagues', [leagueData]);
     }
+}
+
+export async function setLeagues(leagues: ILeagueMetadata[], setCookie: any) {
+    setCookie('leagues', leagues);
 }
 
 export async function getLeagueDetails( parameters: {

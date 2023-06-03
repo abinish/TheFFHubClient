@@ -1,8 +1,9 @@
 import * as React from 'react';
-import { Button } from 'react-bootstrap';
+import { Button, Col, Row } from 'react-bootstrap';
 import { PlayoffMachineContext } from '../Contexts/PlayoffMachineContexts';
 import { IMatchupItem } from '../models';
 import { orderStandings } from '../shared/orderStandingsHelper';
+import { deepCopy } from '../shared/helpers';
 
 export interface IPlayoffMachineRowProps {
     matchup: IMatchupItem;
@@ -12,7 +13,7 @@ export interface IPlayoffMachineRowProps {
 
 
 export default function PlayoffMachineMatchupRow( {matchup}: IPlayoffMachineRowProps) {
-    const leagueData = React.useContext(PlayoffMachineContext);
+    const playoffMachineContext = React.useContext(PlayoffMachineContext);
 
     
     
@@ -20,14 +21,14 @@ export default function PlayoffMachineMatchupRow( {matchup}: IPlayoffMachineRowP
         if((matchup.awayTeamWon && awayTeamWon) || (matchup.tie && tie) || (matchup.homeTeamWon && homeTeamWon))
             return;
 
-        var isDivisionalGame = leagueData.leagueData?.leagueSettings.divisions.some((division) => {
+        var isDivisionalGame = playoffMachineContext.leagueData?.leagueSettings.divisions.some((division) => {
             return division.teams.some((team) => team.teamName === matchup.awayTeamName)
             &&
             division.teams.some((team) => team.teamName === matchup.homeTeamName)
         });
 
-        var homeTeam = leagueData.leagueData?.teams.find((team) => team.teamName === matchup.homeTeamName)!;
-        var awayTeam = leagueData.leagueData?.teams.find((team) => team.teamName === matchup.awayTeamName)!;
+        var homeTeam = playoffMachineContext.leagueData?.teams.find((team) => team.teamName === matchup.homeTeamName)!;
+        var awayTeam = playoffMachineContext.leagueData?.teams.find((team) => team.teamName === matchup.awayTeamName)!;
 
         //Remove previous win/loss/tie from teams
         if(matchup.tie){
@@ -83,16 +84,16 @@ export default function PlayoffMachineMatchupRow( {matchup}: IPlayoffMachineRowP
         matchup.awayTeamWon = awayTeamWon;
         matchup.tie = tie;
         matchup.homeTeamWon = homeTeamWon;
-        if(leagueData.leagueData){
-            orderStandings(leagueData.leagueData);
-            leagueData.setLeagueData(leagueData.leagueData);
+        if(playoffMachineContext.leagueData){
+            orderStandings(playoffMachineContext.leagueData);            
+            playoffMachineContext.setLeagueData(deepCopy(playoffMachineContext.leagueData));
         }
 
     }
 
     const getHomeTeamColor = (matchup: IMatchupItem) => {
         if (matchup.awayTeamWon)
-            return "error";
+            return "danger";
         if (matchup.homeTeamWon)
             return "success";
     
@@ -103,7 +104,7 @@ export default function PlayoffMachineMatchupRow( {matchup}: IPlayoffMachineRowP
         if (matchup.awayTeamWon)
             return "success";
         if (matchup.homeTeamWon)
-            return "error";
+            return "danger";
     
         return "outline-dark";
     }
@@ -116,10 +117,10 @@ export default function PlayoffMachineMatchupRow( {matchup}: IPlayoffMachineRowP
     }
 
     return (
-        <tr>
-            <td><Button variant={getAwayTeamColor(matchup)} onClick={() => handleMatchup(matchup, true, false, false)}>{matchup.awayTeamName}</Button></td>
-			<td><Button variant={getTieColor(matchup)} onClick={() => handleMatchup(matchup, false, true, false)}>Tie</Button></td>
-			<td><Button variant={getHomeTeamColor(matchup)} onClick={() => handleMatchup(matchup, false, false, true)}>{matchup.homeTeamName}</Button></td>
-		</tr>
+        <Row xs={3} sm={3} md={3} lg={3} xl={3} xxl={3} className="justify-content-md-center" style={{paddingTop: '10px'}}>
+            <Col xs={5} sm={5} md={5} lg={5} xl={5} xxl={5}><Button style={{width:'100%'}}  variant={getAwayTeamColor(matchup)} onClick={() => handleMatchup(matchup, true, false, false)}>{matchup.awayTeamName}</Button></Col>
+			<Col xs={1} sm={1} md={1} lg={1} xl={1} xxl={1}><Button style={{width:'100%'}} variant={getTieColor(matchup)} onClick={() => handleMatchup(matchup, false, true, false)}>Tie</Button></Col>
+			<Col xs={5} sm={5} md={5} lg={5} xl={5} xxl={5}><Button style={{width:'100%'}} variant={getHomeTeamColor(matchup)} onClick={() => handleMatchup(matchup, false, false, true)}>{matchup.homeTeamName}</Button></Col>
+		</Row>
     )
 }

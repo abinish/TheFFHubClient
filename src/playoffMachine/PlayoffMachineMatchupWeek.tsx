@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { IWeek } from '../models';
 import PlayoffMachineMatchupRow from './PlayoffMachineMatchupRow';
+import { Container } from 'react-bootstrap';
 
 export interface IPlayoffMachineMatchupWeekProps {
     week: IWeek;
@@ -8,10 +9,10 @@ export interface IPlayoffMachineMatchupWeekProps {
 
 export default function PlayoffMachineMatchupWeek( {week}: IPlayoffMachineMatchupWeekProps) {
     return (
-        <table>
-            <tbody>
-                {week.matchups.map((m, i) => <PlayoffMachineMatchupRow key={i} matchup={m}/>)}
-            </tbody>
-		</table>
+        
+                <Container fluid>
+                    {week.matchups.map((m, i) => <PlayoffMachineMatchupRow key={i} matchup={m}/>)}
+                </Container>
+
     );
 }

@@ -42,9 +42,12 @@ export function PlayoffMachineContainer() {
                 const updatedLeagues = update(leagues.leagueData, {$splice: [[index, 1, league]]});
                 leagues.setLeagueData(updatedLeagues);
             }
+            
+            //Deep copy league
+            var clonedLeague= JSON.parse(JSON.stringify(league));
 
-            orderStandings(league);
-            setLeagueData(league);
+            orderStandings(clonedLeague);
+            setLeagueData(clonedLeague);
 
         }
         fetchData();

@@ -19,12 +19,12 @@ export default function AddLeagueModal() {
             s2: ""
         }
     );
-    
+    const [isLoading, setLoading] = React.useState(false);
 	const [selectedSite, setSelectedSite] = React.useState(Site.ESPN);
 
     const showYahooAuthentication = selectedSite === Site.Yahoo;
 
-    const addLeagueButtonDisabled = !leagueToAdd.name || !leagueToAdd.leagueId;
+    const addLeagueButtonDisabled = !leagueToAdd.name || !leagueToAdd.leagueId || isLoading;
 
     const siteUrlImage = () => {
         if(selectedSite === Site.ESPN){
@@ -102,7 +102,9 @@ export default function AddLeagueModal() {
                 }else{
                     console.log("failure");
                 }
+                setLoading(false);
             }
+            setLoading(true);
             fetchData();
             
 	}
@@ -129,7 +131,7 @@ export default function AddLeagueModal() {
 
                 <span style={{marginTop: 100}}>Add a name to remember your league by: </span><br />
                 <input placeholder="Name of the league" type="text" value={leagueToAdd.name || ''} onChange={s=> handleNameChange(s.target.value)}/> <br />
-                <button className="btn btn-success" onClick={handleAddLeague} disabled={addLeagueButtonDisabled} style={{marginTop:10}}>Add</button>
+                <button className="btn btn-success" onClick={handleAddLeague} disabled={addLeagueButtonDisabled} style={{marginTop:10}}>{isLoading ? 'Loading...' : 'Add'}</button>
             </span>
         }
 		{ showYahooAuthentication &&
