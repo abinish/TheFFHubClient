@@ -7,7 +7,7 @@ export async function verifyLeagueExists( parameters: {
     swid: string,
     s2: string
 }) {
-    const response = await fetch(`https://fm3dfpxzo8.execute-api.us-east-1.amazonaws.com/api/leagueData/leagueExists?site=${parameters.site}&leagueId=${parameters.leagueId}&userId=${parameters.userId}&swid=${parameters.swid}&s2=${parameters.s2}`)
+    const response = await fetch(`https://api.theffhub.com/api/leagueData/leagueExists?site=${parameters.site}&leagueId=${parameters.leagueId}&userId=${parameters.userId}&swid=${parameters.swid}&s2=${parameters.s2}`)
     checkStatus(response);
     return await response.json() as boolean;
 }
@@ -37,6 +37,24 @@ export async function setLeagues(leagues: ILeagueMetadata[], setCookie: any) {
     setCookie('leagues', leagues);
 }
 
+
+export async function setYahooId(yahooId: string, setCookie: any) {
+    setCookie('yahooId', yahooId);
+}
+
+export async function getYahooId(cookies: any) {
+    if(cookies.yahooId){
+        return cookies.yahooId as string;
+    }
+    return "";
+}
+
+export async function getYahooLeagueMetadata(userId: string) {
+    const response = await fetch(`https://api.theffhub.com/api/Yahoo/leagues?userId=${userId}`)
+    checkStatus(response);
+    return await response.json() as ILeagueMetadata[];
+}
+
 export async function getLeagueDetails( parameters: {
     site: string,
     leagueId: string,
@@ -44,7 +62,7 @@ export async function getLeagueDetails( parameters: {
     swid: string,
     s2: string
 }) {
-    const response = await fetch(`https://fm3dfpxzo8.execute-api.us-east-1.amazonaws.com/api/leagueData?site=${parameters.site}&leagueId=${parameters.leagueId}&userId=${parameters.userId}&swid=${parameters.swid}&s2=${parameters.s2}`)
+    const response = await fetch(`https://api.theffhub.com/api/leagueData?site=${parameters.site}&leagueId=${parameters.leagueId}&userId=${parameters.userId}&swid=${parameters.swid}&s2=${parameters.s2}`)
     checkStatus(response);
     return await response.json() as ILeagueDetails;
 }

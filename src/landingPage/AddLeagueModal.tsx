@@ -5,6 +5,7 @@ import { LinkType } from './models'
 import Select from 'react-select';
 import { addLeague, convertSiteToText, verifyLeagueExists } from '../leagueApi';
 import { useCookies } from 'react-cookie';
+import { Button } from 'react-bootstrap';
 
 export default function AddLeagueModal() {
 	const leagues = React.useContext(LeagueContext);
@@ -74,6 +75,10 @@ export default function AddLeagueModal() {
         });
     }
 
+    const handleYahooLogin = () => {
+        window.location.assign('https://api.theffhub.com/api/Auth/YahooLogin');
+    }
+
 	const handleAddLeague = () => {
             const fetchData = async () => {
                 const leagueExists = await verifyLeagueExists(
@@ -131,12 +136,12 @@ export default function AddLeagueModal() {
 
                 <span style={{marginTop: 100}}>Add a name to remember your league by: </span><br />
                 <input placeholder="Name of the league" type="text" value={leagueToAdd.name || ''} onChange={s=> handleNameChange(s.target.value)}/> <br />
-                <button className="btn btn-success" onClick={handleAddLeague} disabled={addLeagueButtonDisabled} style={{marginTop:10}}>{isLoading ? 'Loading...' : 'Add'}</button>
+                <Button variant='success' onClick={handleAddLeague} disabled={addLeagueButtonDisabled} style={{marginTop:10}}>{isLoading ? 'Loading...' : 'Add'}</Button>
             </span>
         }
 		{ showYahooAuthentication &&
             <div style={{paddingTop: '10px'}}>
-                <button className="btn btn-success" ng-click="yahooLogin()">Authenticate with Yahoo</button>
+                <Button variant="success" onClick={handleYahooLogin}>Authenticate with Yahoo</Button>
             </div>
         }
 		</div>

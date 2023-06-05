@@ -15,6 +15,7 @@ import { Container } from 'react-bootstrap';
 import { MaintenanceContainer } from './maintenance/MaintenanceContainer';
 import { ScheduleComparisonContainer } from './scheduleComparison/ScheduleComparisonContainer';
 import { PlayoffOddsContainer } from './playoffOdds/PlayoffOddsContainer';
+import { YahooLeaguesContainer } from './yahooLeagues/YahooLeaguesContainer';
 
 function App() {
 
@@ -31,8 +32,8 @@ function App() {
                 <Route path='/PowerRankings' element={<PowerRankingsContainer/>} />
                 <Route path='/ScheduleComparison' element={<ScheduleComparisonContainer/>} />
                 <Route path='/PlayoffOdds' element={<PlayoffOddsContainer/>} />
-                <Route path='/landing' element={<LandingPageContainer/>} />
-                <Route path='/' element={<MaintenanceContainer/>} />
+                <Route path='/YahooLeagues' element={<YahooLeaguesContainer/>} />
+                <Route path='/' element={<LandingPageContainer/>} />
               </Routes>
           </Container>
         </BrowserRouter>
