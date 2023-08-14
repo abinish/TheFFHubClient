@@ -9,6 +9,7 @@ import { useSearchParams } from 'react-router-dom';
 import { Loading } from '../shared/loading';
 import { getScheduleComparisonTeams } from './ScheduleComparisonHelper';
 import WeeklyRecordTable from './WeeklyRecordTable';
+import { LeagueContext } from '../Contexts/LeagueContexts';
 
 
 export function ScheduleComparisonContainer(){ 
@@ -23,22 +24,42 @@ export function ScheduleComparisonContainer(){
 	const [scheduleComparisonTeams, setScheduleComparisonTeams] = React.useState<IScheduleComparisonTeam[]>();
 	const [leagueData, setLeagueData] = React.useState<ILeagueDetails>();
 
-
 	const leagues = React.useContext(LeagueDataContext);
+	const leaguesMetadata = React.useContext(LeagueContext);
 
 	const [searchParams] = useSearchParams();
 
 	const loading = scheduleComparisonTeams === undefined;
 
-	React.useEffect(() => {
-		const fetchData = async () => {
-			const league = await getLeagueDetails({
-				site: searchParams.get('site') || "",
+	const getLeagueDetailsParam = () => {
+		var matchedLeague = leaguesMetadata.leagues.find((l) => l.leagueId === searchParams.get('leagueId') && l.site === searchParams.get('site'));
+		if(matchedLeague){
+			return {
+				site: matchedLeague.site,
+				leagueId: matchedLeague.leagueId,
+				userId: matchedLeague.userId,
+				swid: matchedLeague.swid,
+				s2: matchedLeague.s2,
+				isPrivateLeague: matchedLeague.isPrivateLeague,
+				privateLeagueData: matchedLeague.privateLeagueData
+			};
+		}else{
+			return {
+				site:  searchParams.get('site') || "",
 				leagueId: searchParams.get('leagueId') || "",
 				userId: searchParams.get('userId') || "",
 				swid: searchParams.get('swid') || "",
-				s2: searchParams.get('s2') || ""
-			});
+				s2: searchParams.get('s2') || "",
+				isPrivateLeague: false,
+				privateLeagueData: ''
+			};
+		}
+	}
+
+	React.useEffect(() => {
+		const fetchData = async () => {
+			
+			const league = await getLeagueDetails(getLeagueDetailsParam());
 			var index = leagues.leagueData.findIndex((l) => l.leagueId === searchParams.get('leagueId') && l.site === searchParams.get('site'));
 			if(index === -1){
 				var updatedLeagues = [...leagues.leagueData, league]

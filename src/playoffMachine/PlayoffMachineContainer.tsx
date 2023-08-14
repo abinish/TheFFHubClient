@@ -10,6 +10,7 @@ import PlayoffMachineMatchupWeek from './PlayoffMachineMatchupWeek';
 import { Tab, Tabs } from 'react-bootstrap';
 import { orderStandings } from '../shared/orderStandingsHelper';
 import { Loading } from '../shared/loading';
+import { LeagueContext } from '../Contexts/LeagueContexts';
 
 export function PlayoffMachineContainer() { 
 	//const history = useHistory();
@@ -20,20 +21,41 @@ export function PlayoffMachineContainer() {
 	// 	return isNaN(optionalAreaId) ? null : optionalAreaId;
 	// }, [search]);
     const leagues = React.useContext(LeagueDataContext);
+    const leaguesMetadata = React.useContext(LeagueContext);
     const [leagueData, setLeagueData] = React.useState<ILeagueDetails>();
     const [tabValue, setTabValue] = React.useState(0);
     const [searchParams] = useSearchParams();
     const loading = leagueData === undefined;
 
-    React.useEffect(() => {
-        const fetchData = async () => {
-            const league = await getLeagueDetails({
-                site: searchParams.get('site') || "",
-                leagueId: searchParams.get('leagueId') || "",
-                userId: searchParams.get('userId') || "",
-                swid: searchParams.get('swid') || "",
-                s2: searchParams.get('s2') || ""
-            });
+	const getLeagueDetailsParam = () => {
+		var matchedLeague = leaguesMetadata.leagues.find((l) => l.leagueId === searchParams.get('leagueId') && l.site === searchParams.get('site'));
+		if(matchedLeague){
+			return {
+				site: matchedLeague.site,
+				leagueId: matchedLeague.leagueId,
+				userId: matchedLeague.userId,
+				swid: matchedLeague.swid,
+				s2: matchedLeague.s2,
+				isPrivateLeague: matchedLeague.isPrivateLeague,
+				privateLeagueData: matchedLeague.privateLeagueData
+			};
+		}else{
+			return {
+				site:  searchParams.get('site') || "",
+				leagueId: searchParams.get('leagueId') || "",
+				userId: searchParams.get('userId') || "",
+				swid: searchParams.get('swid') || "",
+				s2: searchParams.get('s2') || "",
+				isPrivateLeague: false,
+				privateLeagueData: ''
+			};
+		}
+	}
+
+	React.useEffect(() => {
+		const fetchData = async () => {
+			
+			const league = await getLeagueDetails(getLeagueDetailsParam());
             var index = leagues.leagueData.findIndex((l) => l.leagueId === searchParams.get('leagueId') && l.site === searchParams.get('site'));
             if(index === -1){
                 var updatedLeagues = [...leagues.leagueData, league]

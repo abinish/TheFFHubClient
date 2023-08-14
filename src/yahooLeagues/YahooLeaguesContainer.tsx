@@ -2,7 +2,6 @@ import * as React from 'react';
 import { useLocation } from 'react-router';
 import { ILeagueMetadata } from '../models';
 import { getYahooLeagueMetadata, setYahooId} from '../leagueApi';
-import { useCookies } from 'react-cookie';
 import { useSearchParams } from 'react-router-dom';
 import '../landingPage/Cards.css'
 import { Button } from 'react-bootstrap';
@@ -11,7 +10,6 @@ import { Loading } from '../shared/loading';
 
 export function YahooLeaguesContainer() {
 	let location = useLocation();
-	const [cookies, setCookie] = useCookies(['leagues']);
 	const [leagues, setLeagues] = React.useState<ILeagueMetadata[]>([]);
     const [searchParams] = useSearchParams();
     const [loading, setLoading] = React.useState<boolean>(true);
@@ -26,7 +24,7 @@ export function YahooLeaguesContainer() {
         //TODO: If we have a leagueId in the query string, add it to the cookie
         var yahooId = searchParams.get("userId");
         if(yahooId && yahooId.length > 0){
-            setYahooId(yahooId, setCookie);
+            setYahooId(yahooId);
 		    fetchData(yahooId);
         }
 

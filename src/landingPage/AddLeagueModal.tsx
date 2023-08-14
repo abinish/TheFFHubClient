@@ -4,12 +4,12 @@ import { ILeagueMetadata, Site } from '../models';
 import { LinkType } from './models'
 import Select from 'react-select';
 import { addLeague, convertSiteToText, verifyLeagueExists } from '../leagueApi';
-import { useCookies } from 'react-cookie';
 import { Button } from 'react-bootstrap';
+import AddPrivateLeagueOrReturn from './AddPrivateLeagueOrReturn';
+import PrivateLeagueDataEntry from './PrivateLeagueDataEntry';
 
 export default function AddLeagueModal() {
 	const leagues = React.useContext(LeagueContext);
-    const [cookies, setCookie] = useCookies(['leagues']);
     const [leagueToAdd, setLeagueToAdd] = React.useState<ILeagueMetadata>(
         {
             site: "espn",
@@ -17,11 +17,16 @@ export default function AddLeagueModal() {
             name: "",
             userId: "",
             swid: "",
-            s2: ""
+            s2: "",
+            isPrivateLeague: false,
+            privateLeagueData: "",
+            privateLeagueDataValidUntil: new Date("1/1/2100")
+            
         }
     );
     const [isLoading, setLoading] = React.useState(false);
 	const [selectedSite, setSelectedSite] = React.useState(Site.ESPN);
+    const [showAddPrivateLeague, setShowAddPrivateLeague] = React.useState(false);
 
     const showYahooAuthentication = selectedSite === Site.Yahoo;
 
@@ -92,20 +97,9 @@ export default function AddLeagueModal() {
                 );
                 if(leagueExists){
 
-                    addLeague(leagueToAdd, cookies, setCookie);
-
-                    var updatedLeagues = [...leagues.leagues, leagueToAdd]
-		            leagues.setLeagues(updatedLeagues);
-                    setLeagueToAdd({
-                        site: leagueToAdd.site,
-                        leagueId: "",
-                        name: "",
-                        userId: "",
-                        swid: "",
-                        s2: ""
-                    });
+                    handleAddLeagueHelper(leagueToAdd);
                 }else{
-                    console.log("failure");
+                    handleShowPrivateLeague(true);
                 }
                 setLoading(false);
             }
@@ -114,6 +108,28 @@ export default function AddLeagueModal() {
             
 	}
 
+
+    const handleAddPrivateLeague = () => {
+        handleAddLeagueHelper(leagueToAdd);
+        handleShowPrivateLeague(false);
+    }
+
+    const handleAddLeagueHelper = (league: ILeagueMetadata) => {
+        addLeague(league);
+        var updatedLeagues = [...leagues.leagues, league]
+        leagues.setLeagues(updatedLeagues);
+        setLeagueToAdd({
+            site: leagueToAdd.site,
+            leagueId: "",
+            name: "",
+            userId: "",
+            swid: "",
+            s2: "",
+            isPrivateLeague: false,
+            privateLeagueData: '',
+            privateLeagueDataValidUntil: new Date("1/1/2100")
+        });
+    }
     
     const handleSiteSelectedChange = (s: Site) => {
         setLeagueToAdd({
@@ -123,27 +139,54 @@ export default function AddLeagueModal() {
         setSelectedSite(s);
     }
 
+    var getValidUntilDate = () => {
+        var now = new Date();
+        now.setDate(now.getDate() + (((2 + 7 - now.getDay()) % 7) || 7));
+        now.setHours(0,3,0,0);
+        return now;
+	}
+	const handlePrivateLeagueDataChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setLeagueToAdd({
+            ...leagueToAdd,
+            privateLeagueData: e.currentTarget.value,
+            privateLeagueDataValidUntil: getValidUntilDate()
+        });
+    }
+
+    const handleShowPrivateLeague = (value: boolean) => {
+        setLeagueToAdd({
+            ...leagueToAdd,
+            isPrivateLeague: value
+        });
+        setShowAddPrivateLeague(value);
+    }
+
     return (
-        <div>
-		Select the site your league is on: <br />
-		<Select styles={{menu: (base) => ({...base, width: '190px'}), control: (base) => ({...base, width: '190px'})}} options={options} value = { options.filter(option => option.value === selectedSite)} onChange={s =>handleSiteSelectedChange(s?.value || Site.ESPN)}/>
+        <>
+            { showAddPrivateLeague && <AddPrivateLeagueOrReturn setShowAddPrivateLeague={handleShowPrivateLeague} league={leagueToAdd} onPrivateLeagueDataChange={handlePrivateLeagueDataChange} addLeague={handleAddPrivateLeague}/> }
+            { !showAddPrivateLeague && 
+                <div>
+                Select the site your league is on: <br />
+                <Select styles={{menu: (base) => ({...base, width: '190px'}), control: (base) => ({...base, width: '190px'})}} options={options} value = { options.filter(option => option.value === selectedSite)} onChange={s =>handleSiteSelectedChange(s?.value || Site.ESPN)}/>
 
-		{ !showYahooAuthentication &&
-            <span>
-                <span style={{paddingTop:100}}>Grab the league ID from the URL of your league (see image below for more details):</span> <br />
+                { !showYahooAuthentication &&
+                    <span>
+                        <span style={{paddingTop:100}}>Grab the league ID from the URL of your league (see image below for more details):</span> <br />
 
-                <input placeholder="League ID" type="text" value={leagueToAdd.leagueId || ''} onChange={s=> handleLeagueIdChange(s.target.value)} /> {siteUrlImage()}<br />
+                        <input placeholder="League ID" type="text" value={leagueToAdd.leagueId || ''} onChange={s=> handleLeagueIdChange(s.target.value)} /> {siteUrlImage()}<br />
 
-                <span style={{marginTop: 100}}>Add a name to remember your league by: </span><br />
-                <input placeholder="Name of the league" type="text" value={leagueToAdd.name || ''} onChange={s=> handleNameChange(s.target.value)}/> <br />
-                <Button variant='success' onClick={handleAddLeague} disabled={addLeagueButtonDisabled} style={{marginTop:10}}>{isLoading ? 'Loading...' : 'Add'}</Button>
-            </span>
-        }
-		{ showYahooAuthentication &&
-            <div style={{paddingTop: '10px'}}>
-                <Button variant="success" onClick={handleYahooLogin}>Authenticate with Yahoo</Button>
-            </div>
-        }
-		</div>
+                        <span style={{marginTop: 100}}>Add a name to remember your league by: </span><br />
+                        <input placeholder="Name of the league" type="text" value={leagueToAdd.name || ''} onChange={s=> handleNameChange(s.target.value)}/> <br />
+                        <Button variant='success' onClick={handleAddLeague} disabled={addLeagueButtonDisabled} style={{marginTop:10}}>{isLoading ? 'Loading...' : 'Add'}</Button>
+                    </span>
+                }
+                { showYahooAuthentication &&
+                    <div style={{paddingTop: '10px'}}>
+                        <Button variant="success" onClick={handleYahooLogin}>Authenticate with Yahoo</Button>
+                    </div>
+                }
+                </div>
+            }
+        </>
     )
 }

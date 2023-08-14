@@ -74,6 +74,13 @@ export interface ILeagueMetadata {
     userId: string;
     swid: string;
     s2: string;
+    isPrivateLeague: boolean;
+    privateLeagueData: string;
+    privateLeagueDataValidUntil: Date;
+}
+
+export interface IPrivateLeagueData {
+    
 }
 
 export enum Site {

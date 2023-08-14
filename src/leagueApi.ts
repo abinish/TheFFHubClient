@@ -12,9 +12,10 @@ export async function verifyLeagueExists( parameters: {
     return await response.json() as boolean;
 }
 
-export async function getLeagues(cookies: any) {
-    if(cookies.leagues){
-        return cookies.leagues as ILeagueMetadata[];
+export async function getLeagues() {
+    const leagueData = localStorage.getItem('leagues')
+    if(leagueData){
+        return JSON.parse(leagueData) as ILeagueMetadata[];
     }else{
         return [];
     }
@@ -24,27 +25,32 @@ export async function getLeagues(cookies: any) {
     return await response.json() as ILeagueMetadata[];
 }
 
-export async function addLeague(leagueData: ILeagueMetadata, cookies: any, setCookie: any) {
-    if(cookies.leagues){
-        setCookie('leagues', [...cookies.leagues, leagueData]);
+export async function addLeague(leagueData: ILeagueMetadata) {
+    const leaguesStorageData = localStorage.getItem('leagues');
+    if(leaguesStorageData){
+        const leagues = JSON.parse(leaguesStorageData) as ILeagueMetadata[];
+        const newLeagues = [...leagues, leagueData];
+        localStorage.setItem('leagues', JSON.stringify(newLeagues));
     }
     else{
-        setCookie('leagues', [leagueData]);
+        const newLeagues = [leagueData];
+        localStorage.setItem('leagues', JSON.stringify(newLeagues));
     }
 }
 
-export async function setLeagues(leagues: ILeagueMetadata[], setCookie: any) {
-    setCookie('leagues', leagues);
+export async function setLeagues(leagues: ILeagueMetadata[]) {
+    localStorage.setItem('leagues', JSON.stringify(leagues));
 }
 
 
-export async function setYahooId(yahooId: string, setCookie: any) {
-    setCookie('yahooId', yahooId);
+export async function setYahooId(yahooId: string) {
+    localStorage.setItem('yahooId', yahooId);
 }
 
-export async function getYahooId(cookies: any) {
-    if(cookies.yahooId){
-        return cookies.yahooId as string;
+export async function getYahooId() {
+    const yahooId = localStorage.getItem('yahooId');
+    if(yahooId){
+        return yahooId;
     }
     return "";
 }
@@ -60,11 +66,29 @@ export async function getLeagueDetails( parameters: {
     leagueId: string,
     userId: string,
     swid: string,
-    s2: string
+    s2: string,
+    isPrivateLeague: boolean,
+    privateLeagueData: string
 }) {
+    if(parameters.isPrivateLeague){
+        //Make a post request to the private league endpoint
+        const response = await fetch(`https://api.theffhub.com/api/leagueData`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                data: parameters.privateLeagueData
+            })
+        });
+        checkStatus(response);
+        return await response.json() as ILeagueDetails;
+    }else{
+
     const response = await fetch(`https://api.theffhub.com/api/leagueData?site=${parameters.site}&leagueId=${parameters.leagueId}&userId=${parameters.userId}&swid=${parameters.swid}&s2=${parameters.s2}`)
     checkStatus(response);
     return await response.json() as ILeagueDetails;
+    }
 }
 
 export function checkStatus(response: Response) {
