@@ -86,7 +86,8 @@ export interface IPrivateLeagueData {
 export enum Site {
     ESPN =    1,
     Yahoo =   2,
-    Sleeper = 3
+    Sleeper = 3,
+    Fleaflicker = 4
 }
 
 export interface IHeadToHeadStandingsTeam {

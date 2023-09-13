@@ -111,6 +111,8 @@ export function convertSiteToText(site: Site){
             return "yahoo";
         case Site.Sleeper:
             return "sleeper";
+        case Site.Fleaflicker:
+            return "fleaflicker";
         default:
             return "";
     }
