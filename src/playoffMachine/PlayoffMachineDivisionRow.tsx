@@ -36,13 +36,13 @@ export default function PlayoffMachineDivisionRow( {team, isPlayoffTeam}: IPlayo
 
     const getStyle = (isPlayoffTeam: boolean) => {
         if(isPlayoffTeam)
-            return {backgroundColor: '#dff0d8'}
+            return 'playoffTeam'
         
-        return {}
+        return ''
     }
 
     return (
-        <tr style={getStyle(isPlayoffTeam)}>
+        <tr className={getStyle(isPlayoffTeam)}>
             <td>{team.teamName}{renderTooltip(team)}</td>
             <td>{team.wins}</td>
             <td>{team.losses}</td>
