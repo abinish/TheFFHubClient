@@ -177,7 +177,7 @@ export default function AddLeagueModal() {
                         <input placeholder="League ID" type="text" value={leagueToAdd.leagueId || ''} onChange={s=> handleLeagueIdChange(s.target.value)} /> {siteUrlImage()}<br />
 
                         <span style={{marginTop: 100}}>Add a name to remember your league by: </span><br />
-                        <input placeholder="Name of the league" type="text" value={leagueToAdd.name || ''} onChange={s=> handleNameChange(s.target.value)}/> <br />
+                        <input placeholder="Name of the league" type="text" value={leagueToAdd.name || ''} onChange={s=> handleNameChange(s.target.value)} name='leagueName'/> <br />
                         <Button variant='success' onClick={handleAddLeague} disabled={addLeagueButtonDisabled} style={{marginTop:10}}>{isLoading ? 'Loading...' : 'Add'}</Button>
                     </span>
                 }

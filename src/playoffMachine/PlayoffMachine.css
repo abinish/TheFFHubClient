@@ -29,5 +29,5 @@
 }
 
 .playoffTeam {
-  background-color: #dff0d8 !important;
+  --bs-table-bg: #dff0d8 !important;
 }
