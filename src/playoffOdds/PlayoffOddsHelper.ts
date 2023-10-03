@@ -68,7 +68,7 @@ const simluateRestOfSeason = (league: ILeagueDetails, playoffOddsTeams: IPlayoff
 			}
 		});
 	});
-
+	league.teams = playoffOddsTeams;
 	orderStandings(league);
 }
 
