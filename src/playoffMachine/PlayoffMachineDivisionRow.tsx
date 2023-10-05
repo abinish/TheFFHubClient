@@ -29,7 +29,9 @@ export default function PlayoffMachineDivisionRow( {team, isPlayoffTeam}: IPlayo
                                 </div>)}
                 </Tooltip>
             )}>
-                <FontAwesomeIcon icon={faInfo} size='sm' className='tiebreakerIcon' />
+                <span>
+                    <FontAwesomeIcon icon={faInfo} size='sm' className='tiebreakerIcon' />
+                </span>
             </OverlayTrigger>
         )
     }   
