@@ -259,7 +259,7 @@ const headToHeadTiebreaker = (teams: ITeam[], site: Site, tiebreaker: string[], 
 		var teamLosses = 0;
 		var teamTies = 0;
 
-        for(var j=0; j<teams.length; j++){
+        for(var j=0; j<allMatchups.length; j++){
             var matchup = allMatchups[j];
 
             if(matchup.awayTeamName === selectedTeam.teamName && otherTeams.find((team) => team.teamName === matchup.homeTeamName)){
@@ -341,19 +341,19 @@ const headToHeadTiebreaker = (teams: ITeam[], site: Site, tiebreaker: string[], 
 		return undefined;
     }
 
-    var bestRecordTeam = teamsWithMatchingWinPercentage[0].team;
+    var bestRecordTeam = teamsWithMatchingWinPercentage[0];
 
     var loserStrings = teamsWithoutMatchingWinPercentage.map((team) => {
         return team.team.teamName + ": " + team.wins + "-" + team.losses + "-" + team.ties;
     });
 
     teamsWithoutMatchingWinPercentage.forEach((team) => {
-        addTiebreakerToTeam(team.team, tiebreaker, "Lost head to head tiebreaker to " + bestRecordTeam.teamName + " with " + bestRecordTeam.wins + "-" + bestRecordTeam.losses + "-" + bestRecordTeam.ties + " record compared to " + team.wins + "-" + team.losses + "-" + team.ties);
+        addTiebreakerToTeam(team.team, tiebreaker, "Lost head to head tiebreaker to " + bestRecordTeam.team.teamName + " with " + bestRecordTeam.wins + "-" + bestRecordTeam.losses + "-" + bestRecordTeam.ties + " record compared to " + team.wins + "-" + team.losses + "-" + team.ties);
     });
 
 
-    addTiebreakerToTeam(bestRecordTeam, tiebreaker, "Won points for by having more points for than the specified team(s): " + loserStrings.join(', '));
-    return bestRecordTeam;	
+    addTiebreakerToTeam(bestRecordTeam.team, tiebreaker, "Won head to head tiebreaker to " + bestRecordTeam.team.teamName + " with " + bestRecordTeam.wins + "-" + bestRecordTeam.losses + "-" + bestRecordTeam.ties + " record compared to " + loserStrings.join(', '));
+    return bestRecordTeam.team;	
 
 }
 
