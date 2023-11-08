@@ -113,6 +113,8 @@ export function convertSiteToText(site: Site){
             return "sleeper";
         case Site.Fleaflicker:
             return "fleaflicker";
+        case Site.NFL:
+            return "nfl";
         default:
             return "";
     }

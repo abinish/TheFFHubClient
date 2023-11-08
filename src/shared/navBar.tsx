@@ -12,13 +12,12 @@ export default function NavBar() {
 		<Navbar className='navbar' variant='dark'>
 		<Container>
 			<Navbar.Brand as={Link} to="/">The Fantasy Football Hub</Navbar.Brand>
-			{/* <Navbar.Collapse id="basic-navbar-nav">
+			<Navbar.Collapse id="basic-navbar-nav">
 			<Nav className="navbar-nav">
-				<Nav.Link href="#home">Home</Nav.Link>
-				<Nav.Link href="#link">Link</Nav.Link>
+				<Nav.Link  as={Link} to="/About">About</Nav.Link>
 
 			</Nav>
-			</Navbar.Collapse> */}
+			</Navbar.Collapse> 
 		</Container>
 		</Navbar>
 	);

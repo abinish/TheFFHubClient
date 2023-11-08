@@ -64,7 +64,8 @@ export default function AddLeagueModal() {
         { value: Site.ESPN, label: 'ESPN' },
         { value: Site.Yahoo, label: 'Yahoo' },
         { value: Site.Sleeper, label: 'Sleeper' },
-        { value: Site.Fleaflicker, label: 'Fleaflicker (NARFFL beta)' }
+        { value: Site.Fleaflicker, label: 'Fleaflicker (NARFFL beta)' },
+        { value: Site.NFL, label: 'NFL (beta)' }
     ]
 
     const handleLeagueIdChange = (s: string) => {

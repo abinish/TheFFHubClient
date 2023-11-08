@@ -83,7 +83,8 @@ export function PlayoffOddsContainer(){
 	//function to see if there are 5 completed weeks or not on leagueData object
 
 	const hasInsufficientData = () => {
-		if(leagueData?.completedSchedule.length ?? 0 < 5){
+
+		if((leagueData?.completedSchedule.length ?? 0) < 4){
 			return true;
 		}
 		return false;

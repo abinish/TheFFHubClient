@@ -87,7 +87,8 @@ export enum Site {
     ESPN =    1,
     Yahoo =   2,
     Sleeper = 3,
-    Fleaflicker = 4
+    Fleaflicker = 4,
+    NFL = 5
 }
 
 export interface IHeadToHeadStandingsTeam {
