@@ -7,9 +7,12 @@ import './oldCss/bootstrap.css'
 import './oldCss/FFHub.css'
 */
 import App from './App';
+import ReactGA from 'react-ga4';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 
+
+ReactGA.initialize("G-PLL3W1QWMW");
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
