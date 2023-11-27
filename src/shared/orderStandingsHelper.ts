@@ -457,6 +457,13 @@ const getSiteFromString = (site: string) : Site => {
 
     if (site.toUpperCase()  === "SLEEPER")
         return Site.Sleeper;
+        
+    if(site.toUpperCase() === "FLEAFLICKER")
+        return Site.Fleaflicker;
+
+    if(site.toUpperCase() === "NFL")
+        return Site.NFL;
+
     
     return Site.ESPN;
 }
