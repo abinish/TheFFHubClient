@@ -449,13 +449,13 @@ const sortByDivisionWinPercentage = (teams: ITeam[]) : ITeam[] => {
 }
 
 const getSiteFromString = (site: string) : Site => {
-    if(site === "ESPN")
+    if(site.toUpperCase() === "ESPN")
         return Site.ESPN;
     
-    if (site === "Yahoo")
+    if (site.toUpperCase()  === "YAHOO")
         return Site.Yahoo;
 
-    if (site === "Sleeper")
+    if (site.toUpperCase()  === "SLEEPER")
         return Site.Sleeper;
     
     return Site.ESPN;

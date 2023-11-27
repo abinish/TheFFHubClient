@@ -18,6 +18,7 @@ import { YahooLeaguesContainer } from './yahooLeagues/YahooLeaguesContainer';
 import { LeagueContext } from './Contexts/LeagueContexts';
 import { getLeagues } from './leagueApi';
 import { AboutContainer } from './about/AboutContainer';
+import { PlayoffScenariosContainer } from './playoffScenarios/PlayoffScenariosContainer';
 
 function App() {
 
@@ -57,6 +58,7 @@ function App() {
                 <Route path='/PowerRankings' element={<PowerRankingsContainer/>} />
                 <Route path='/ScheduleComparison' element={<ScheduleComparisonContainer/>} />
                 <Route path='/PlayoffOdds' element={<PlayoffOddsContainer/>} />
+                <Route path='/PlayoffScenarios' element={<PlayoffScenariosContainer/>} />
                 <Route path='/YahooLeagues' element={<YahooLeaguesContainer/>} />
                 <Route path='/About' element={<AboutContainer/>} />
                 <Route path='/' element={<LandingPageContainer/>} />

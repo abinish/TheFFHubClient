@@ -8,9 +8,11 @@ import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 export interface IPlayoffMachineDivisionRowProps {
     team: ITeam;
     isPlayoffTeam: boolean;
+    clinchedDivision: boolean;
+    clinchedPlayoffs: boolean;
 }
 
-export default function PlayoffMachineDivisionRow( {team, isPlayoffTeam}: IPlayoffMachineDivisionRowProps) {
+export default function PlayoffMachineDivisionRow( {team, isPlayoffTeam, clinchedDivision, clinchedPlayoffs}: IPlayoffMachineDivisionRowProps) {
 
 
     const renderTooltip = (team: ITeam) => {
@@ -43,9 +45,19 @@ export default function PlayoffMachineDivisionRow( {team, isPlayoffTeam}: IPlayo
         return ''
     }
 
+    const renderClinchPrefix = (clinchedDivision: boolean, clinchedPlayoffs: boolean) => {
+        if(clinchedDivision){
+            return 'y-'
+        }else if(clinchedPlayoffs){
+            return 'x-'
+        }
+
+        return '';
+    }
+
     return (
         <tr className={getStyle(isPlayoffTeam)}>
-            <td>{team.teamName}{renderTooltip(team)}</td>
+            <td>{renderClinchPrefix(clinchedDivision, clinchedPlayoffs)}{team.teamName}{renderTooltip(team)}</td>
             <td>{team.wins}</td>
             <td>{team.losses}</td>
             <td>{team.ties}</td>

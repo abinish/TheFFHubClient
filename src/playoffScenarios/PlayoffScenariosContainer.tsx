@@ -8,11 +8,14 @@ import { Loading } from '../shared/loading';
 import { LeagueContext } from '../Contexts/LeagueContexts';
 import { deepCopy, setMatchup } from '../shared/helpers';
 import { orderStandings } from '../shared/orderStandingsHelper';
+import { IPlayoffScenarioProgress } from './models';
+import { Button } from 'react-bootstrap';
 
 export function PlayoffScenariosContainer(){ 
 
 	const [scenarios, setScenarios] = React.useState<ILeagueDetails[]>([]);
 	const [leagueData, setLeagueData] = React.useState<ILeagueDetails>();
+	const [scenarioCount, setScenarioCount] = React.useState<IPlayoffScenarioProgress>({ totalScenarios: 0, processedScenarios: 0});
 
 
 	const leagues = React.useContext(LeagueDataContext);
@@ -61,73 +64,83 @@ export function PlayoffScenariosContainer(){
 			}
             setLeagueData(league);
 
+			setScenarioCount({...scenarioCount, totalScenarios:  Math.pow(3, league.remainingSchedule.reduce((total, week) => total + week.matchups.length, 0))});
 
-			//Create loop to generate all possible scenarios for remaining schedule
-			//for each scenario, calculate the playoff odds
-			getScenarios(league);
+			
 
-
-		}
-
-		const getScenarios = (league: ILeagueDetails) => {
-			var scenarios: ILeagueDetails[] = [];
-			const addScenarioToVariable = (league: ILeagueDetails) => {
-				scenarios.push(league);
-			};
-
-			//limit league.remainingweeks to 2
-			//league.remainingSchedule = league.remainingSchedule.slice(0, 2);
-
-			setOutcomesVarIterative(league, addScenarioToVariable);
-
-			setScenarios(scenarios);
 
 		}
 
-		const setOutcomesVarIterative = (initialLeague: ILeagueDetails, addScenarioToVariable: (league: ILeagueDetails) => void) => {
-			let stack = [initialLeague];
 		
-			while (stack.length > 0) {
-				let league = stack.pop()!;
-		
-				if (league.remainingSchedule.every(week => week.matchups.every(game => game.awayTeamWon || game.homeTeamWon || game.tie))) {
-					orderStandings(league);
-					addScenarioToVariable(league);
-					continue;
-				}
-		
-				//get first matchup from the first week in remaining schedule that is not resolved
-				
-				for (let week of league.remainingSchedule) {
-
-					var matchupToLookAt = week.matchups.find(x => !x.awayTeamWon && !x.homeTeamWon && !x.tie);
-
-					if(!matchupToLookAt){
-						continue;
-					}
-					const newLeagueTie = deepCopy(league);
-					const tieGame = newLeagueTie.remainingSchedule.find(matchingWeek => matchingWeek.week === week.week)!.matchups.find(matchup => matchup.awayTeamName === matchupToLookAt!.awayTeamName && matchup.homeTeamName === matchupToLookAt!.homeTeamName)!;
-					setMatchup(tieGame, false, true, false, newLeagueTie, newLeagueTie.teams);
-					stack.push(newLeagueTie);
-
-					const newLeagueHome = deepCopy(league);			
-					const homeGame = newLeagueHome.remainingSchedule.find(matchingWeek => matchingWeek.week === week.week)!.matchups.find(matchup => matchup.awayTeamName === matchupToLookAt!.awayTeamName && matchup.homeTeamName === matchupToLookAt!.homeTeamName)!;
-					setMatchup(homeGame, true, false, false, newLeagueHome, newLeagueHome.teams);
-					stack.push(newLeagueHome);
-
-					const newLeagueAway = deepCopy(league);
-					const awayGame = newLeagueAway.remainingSchedule.find(matchingWeek => matchingWeek.week === week.week)!.matchups.find(matchup => matchup.awayTeamName === matchupToLookAt!.awayTeamName && matchup.homeTeamName === matchupToLookAt!.homeTeamName)!;
-					setMatchup(awayGame, false, false, true, newLeagueAway, newLeagueAway.teams);
-					stack.push(newLeagueAway);
-					break;
-						
-					
-				}
-			}
-		}
 
 		fetchData();
 	}, []);
+
+	const getScenarios = () => {
+		if(!leagueData)
+			return;
+
+		var scenarios: ILeagueDetails[] = [];
+		const addScenarioToVariable = (league: ILeagueDetails) => {
+			scenarios.push(league);
+		};
+
+		//limit league.remainingweeks to 2
+		//league.remainingSchedule = league.remainingSchedule.slice(0, 2);
+
+		setOutcomesVarIterative(leagueData, addScenarioToVariable);
+
+		setScenarios(scenarios);
+
+	}
+
+	const setOutcomesVarIterative = (initialLeague: ILeagueDetails, addScenarioToVariable: (league: ILeagueDetails) => void) => {
+		let stack = [initialLeague];
+	
+		while (stack.length > 0) {
+			let league = stack.pop()!;
+	
+			if (league.remainingSchedule.every(week => week.matchups.every(game => game.awayTeamWon || game.homeTeamWon || game.tie))) {
+				orderStandings(league);
+				addScenarioToVariable(league);
+				
+				setScenarioCount({...scenarioCount, processedScenarios:  scenarioCount.processedScenarios++});
+				continue;
+			}
+	
+			//get first matchup from the first week in remaining schedule that is not resolved
+			
+			for (let week of league.remainingSchedule) {
+
+				var matchupToLookAt = week.matchups.find(x => !x.awayTeamWon && !x.homeTeamWon && !x.tie);
+
+				if(!matchupToLookAt){
+					continue;
+				}
+/* 					const newLeagueTie = deepCopy(league);
+				const tieGame = newLeagueTie.remainingSchedule.find(matchingWeek => matchingWeek.week === week.week)!.matchups.find(matchup => matchup.awayTeamName === matchupToLookAt!.awayTeamName && matchup.homeTeamName === matchupToLookAt!.homeTeamName)!;
+				setMatchup(tieGame, false, true, false, newLeagueTie, newLeagueTie.teams);
+				stack.push(newLeagueTie); */
+
+				const newLeagueHome = deepCopy(league);			
+				const homeGame = newLeagueHome.remainingSchedule.find(matchingWeek => matchingWeek.week === week.week)!.matchups.find(matchup => matchup.awayTeamName === matchupToLookAt!.awayTeamName && matchup.homeTeamName === matchupToLookAt!.homeTeamName)!;
+				setMatchup(homeGame, true, false, false, newLeagueHome, newLeagueHome.teams);
+				stack.push(newLeagueHome);
+
+				const newLeagueAway = deepCopy(league);
+				const awayGame = newLeagueAway.remainingSchedule.find(matchingWeek => matchingWeek.week === week.week)!.matchups.find(matchup => matchup.awayTeamName === matchupToLookAt!.awayTeamName && matchup.homeTeamName === matchupToLookAt!.homeTeamName)!;
+				setMatchup(awayGame, false, false, true, newLeagueAway, newLeagueAway.teams);
+				stack.push(newLeagueAway);
+				break;
+					
+				
+			}
+		}
+	}
+
+	const runScenarios = () => {
+		getScenarios();
+	}
 
 
 	//function to see if there are 5 completed weeks or not on leagueData object
@@ -142,6 +155,11 @@ export function PlayoffScenariosContainer(){
 	return (
 		<>
 			{scenarios.length}
+			Total Possible Scenarios: {scenarioCount.totalScenarios.toLocaleString()}
+			<br />
+			Scenarios Processed: {scenarioCount.processedScenarios.toLocaleString()}
+			<br />
+			<Button onClick={() => runScenarios()}>Run all scenarios</Button>
 		</>
 	);
 

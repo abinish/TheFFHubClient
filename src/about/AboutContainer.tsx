@@ -29,7 +29,6 @@ export function AboutContainer() {
 			<h2>Planned Features (with no timeline)</h2>
 			<ul>
 				<li>Login support</li>
-				<li>Quick select playoff machine winners</li>
 				<li>List all playoff scenarios</li>
 				<li>Full fleaflicker support (need them to add api support for playoff teams and regular season weeks)</li>
 				<li>MFL support (need MFL to improve security or public access to data)</li>
