@@ -10,9 +10,10 @@ export interface IPlayoffMachineDivisionRowProps {
     isPlayoffTeam: boolean;
     clinchedDivision: boolean;
     clinchedPlayoffs: boolean;
+    clinchedElimination: boolean;
 }
 
-export default function PlayoffMachineDivisionRow( {team, isPlayoffTeam, clinchedDivision, clinchedPlayoffs}: IPlayoffMachineDivisionRowProps) {
+export default function PlayoffMachineDivisionRow( {team, isPlayoffTeam, clinchedDivision, clinchedPlayoffs, clinchedElimination}: IPlayoffMachineDivisionRowProps) {
 
 
     const renderTooltip = (team: ITeam) => {
@@ -50,6 +51,8 @@ export default function PlayoffMachineDivisionRow( {team, isPlayoffTeam, clinche
             return 'y-'
         }else if(clinchedPlayoffs){
             return 'x-'
+        }else if (clinchedElimination){
+            return 'e-'
         }
 
         return '';

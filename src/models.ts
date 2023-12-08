@@ -17,6 +17,7 @@ export interface ILeagueSettings {
     tieRule: number;
     playoffTeams: number;
     divisions: IDivision[];
+    playsLeagueMedian: boolean;
 }
 
 export interface IWeek {

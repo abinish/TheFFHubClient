@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { IDivision, ITeam, IWeek } from '../models';
 import PlayoffMachineDivisionRow from './PlayoffMachineDivisionRow';
+import { get } from 'http';
 
 export interface IPlayoffMachineTableProps {
     division: IDivision | null;
@@ -73,6 +74,19 @@ export default function PlayoffMachineDivision({
         return false;
     }
 
+    const clinchedElimination = (team: ITeam) => {
+        var teamMaxVictoryPoints = team.wins + (0.5*team.ties) + getUndecidedRemainingGamesForTeam(team);
+        if(!teams)
+            return false;
+
+        var teamsWithBetterRecord = teams.filter(t => (t.wins + (0.5*t.ties)) > teamMaxVictoryPoints && t.teamName !== team.teamName);
+        if(teamsWithBetterRecord.length >= playoffTeams)
+            return true;
+
+        return false;
+
+    }
+
     const getUndecidedRemainingGamesForTeam = (team: ITeam) => {
         var remainingGames = 0;
 
@@ -101,7 +115,7 @@ export default function PlayoffMachineDivision({
                     </tr>
                 </thead>
                 <tbody>
-                    {getTeamsFromDivision(division)?.sort((a,b) => a.overallRank > b.overallRank? 1 : -1).map(t => <PlayoffMachineDivisionRow key={t.teamName} team={t} isPlayoffTeam={getIsPlayoffTeam(t, playoffTeams)} clinchedDivision={clinchedDivisionWin(t)} clinchedPlayoffs={clinchedPlayoffSpot(t)} />)}
+                    {getTeamsFromDivision(division)?.sort((a,b) => a.overallRank > b.overallRank? 1 : -1).map(t => <PlayoffMachineDivisionRow key={t.teamName} team={t} isPlayoffTeam={getIsPlayoffTeam(t, playoffTeams)} clinchedDivision={clinchedDivisionWin(t)} clinchedPlayoffs={clinchedPlayoffSpot(t)} clinchedElimination={clinchedElimination(t)} />)}
                 </tbody>
             </table>	
 		</div>

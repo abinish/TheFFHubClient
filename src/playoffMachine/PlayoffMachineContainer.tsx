@@ -253,9 +253,9 @@ export function PlayoffMachineContainer() {
 					<br/>
 					x: Clinched playoffs
 					<br/>
-					{/* e: Eliminated from playoffs
-					<br/> */}
-					Clinching criteria are purely on record.  Tiebreakers are not considered for clinching.  Theffhub's clinching criteria do not consider the future schedule and only handles 
+					e: Eliminated from playoffs
+					<br/>
+					Clinching criteria are purely on record.  Tiebreakers are not considered for clinching.  Clinching is purely based on mathematical clinching/elimination.  Future matchups are not considered.
 				</div>
         </PlayoffMachineContext.Provider>;
 }

@@ -42,6 +42,9 @@ export default function AddLeagueModal() {
         if(selectedSite === Site.Sleeper){
             return <img src="/sleeperUrl.png" alt="sleeper url" />
         }
+        if(selectedSite === Site.Fleaflicker){
+            return <img src="/fleaflickerUrl.PNG" alt="fleaflicker url" />
+        }
         return <span></span>;
     }
 
