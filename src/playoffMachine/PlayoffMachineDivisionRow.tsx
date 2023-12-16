@@ -20,7 +20,7 @@ export default function PlayoffMachineDivisionRow( {team, isPlayoffTeam, clinche
         if(team.tiebreakers.length === 0) return (<></>)
 
         return (
-            <OverlayTrigger overlay={(props)=> (
+            <OverlayTrigger placement='auto'  overlay={(props)=> (
                 <Tooltip  className='tooltip' id={`tooltip-${team.teamName}`} {...props}>
                         {team.tiebreakers.map((t, i) => 
                             <div  key={i}>

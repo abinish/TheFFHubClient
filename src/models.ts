@@ -6,6 +6,7 @@ export interface ILeagueDetails {
     site: string;
     leagueId: string;
     teams: ITeam[];
+    season: string;
 }
 
 export interface ILeagueSettings {
@@ -45,6 +46,7 @@ export interface IDivision {
 export interface ITeam {
     id: number;
     teamName: string;
+    teamManager: string;
     division: string;
     wins: number;
     losses: number;

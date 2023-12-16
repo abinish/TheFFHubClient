@@ -12,6 +12,7 @@ import { orderStandings } from '../shared/orderStandingsHelper';
 import { Loading } from '../shared/loading';
 import { LeagueContext } from '../Contexts/LeagueContexts';
 import { deepCopy } from '../shared/helpers';
+import PlayoffMachineAdvancedOptions from './PlayoffMachineAdvancedOptions';
 
 export function PlayoffMachineContainer() { 
 	//const history = useHistory();
@@ -227,6 +228,9 @@ export function PlayoffMachineContainer() {
 
     }
 
+	const handlePointsChange = (team: ITeam, pointsFor: number) => {
+        leagueData.teams.find((t) => t.teamName === team.teamName)!.pointsFor = pointsFor;
+    }
 
 
 
@@ -247,6 +251,7 @@ export function PlayoffMachineContainer() {
                 <Tabs id="test" className="mb-3" fill>
                     {leagueData?.remainingSchedule.map((w, index) => <Tab key={index} eventKey={w.week} title={"Week " + w.week}  ><PlayoffMachineMatchupWeek week={w}/> </Tab>)}
                 </Tabs>
+				<PlayoffMachineAdvancedOptions league={leagueData} handlePointsChange={handlePointsChange} />
 				<br/><br/><br/>
 				<div>
 					y: Clinched division
