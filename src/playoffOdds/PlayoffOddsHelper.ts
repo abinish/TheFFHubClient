@@ -45,6 +45,25 @@ const random = () => {
 	return Math.sqrt(-2.0 * Math.log(u)) * Math.cos(2.0 * Math.PI * v);
 }
 
+const median = (values: number[]): number => {
+
+	if (values.length === 0) {
+	  return 0;
+	}
+  
+	// Sorting values, preventing original array
+	// from being mutated.
+	values = [...values].sort((a, b) => a - b);
+  
+	const half = Math.floor(values.length / 2);
+  
+	return (values.length % 2
+	  ? values[half]
+	  : (values[half - 1] + values[half]) / 2
+	);
+  
+  }
+
 const simluateRestOfSeason = (league: ILeagueDetails, playoffOddsTeams: IPlayoffOddsTeam[]) => {
 	league.remainingSchedule.forEach(week => {
 		week.matchups.forEach(matchup => {
@@ -59,6 +78,9 @@ const simluateRestOfSeason = (league: ILeagueDetails, playoffOddsTeams: IPlayoff
 			awayTeam.pointsFor += awayTeamScore;
 			awayTeam.pointsAgainst += homeTeamScore;
 
+			//matchup.homeTeamScore = homeTeamScore;
+			//matchup.awayTeamScore = awayTeamScore;
+
 			if (homeTeamScore > awayTeamScore) {
 				setMatchup(matchup, false, false, true, league, playoffOddsTeams);
 			} else if (awayTeamScore > homeTeamScore) {
@@ -67,6 +89,40 @@ const simluateRestOfSeason = (league: ILeagueDetails, playoffOddsTeams: IPlayoff
 				setMatchup(matchup, false, true, false, league, playoffOddsTeams)
 			}
 		});
+
+		/* if(league.leagueSettings.playsLeagueMedian){
+			//Get the median score for the week
+			var scores: number[] = [];
+			week.matchups.forEach(matchup => {
+				scores.push(matchup.awayTeamScore);
+				scores.push(matchup.homeTeamScore);
+			});
+			//Get the middle two scores and average them
+			scores.sort((a, b) => a - b);
+			var medianScore = median(scores);
+
+			week.matchups.forEach(matchup => {
+				var homeTeam = playoffOddsTeams.find(team => team.teamName === matchup.homeTeamName)!;
+				var awayTeam = playoffOddsTeams.find(team => team.teamName === matchup.awayTeamName)!;
+
+				if(matchup.homeTeamScore >= medianScore){
+					homeTeam.wins++;
+				}else {
+					homeTeam.losses++;
+				}
+
+				if(matchup.awayTeamScore >= medianScore){
+					awayTeam.wins++;
+				}
+				else {
+					awayTeam.losses++;
+				}
+
+
+			});
+
+		} */
+
 	});
 	league.teams = playoffOddsTeams;
 	orderStandings(league);

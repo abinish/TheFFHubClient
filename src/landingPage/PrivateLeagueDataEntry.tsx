@@ -20,14 +20,14 @@ export default function PrivateLeagueDataEntry( {league, onPrivateLeagueDataChan
 
 		//If it is the second half of the year return this year
 		//Otherwise it is early in the next year and espn uses the start of the season as the seasonID
-		if (now.getMonth() > 6)
+		if (now.getMonth() > 1)
 			return now.getFullYear();
 
 
 		return now.getFullYear() -1;
 	}
 
-	const privateLeagueUri = 'https://fantasy.espn.com/apis/v3/games/ffl/seasons/' + getSeasonId() + '/segments/0/leagues/' + league.leagueId + '?view=mMatchupScore&view=mTeam&view=mSettings';
+	const privateLeagueUri = 'https://lm-api-reads.fantasy.espn.com/apis/v3/games/ffl/seasons/' + getSeasonId() + '/segments/0/leagues/' + league.leagueId + '?view=mMatchupScore&view=mTeam&view=mSettings';
 
     return (
 		<Form.Group controlId="privateLeague">

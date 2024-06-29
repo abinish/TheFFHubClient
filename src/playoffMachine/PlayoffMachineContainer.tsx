@@ -251,7 +251,7 @@ export function PlayoffMachineContainer() {
                 <Tabs id="test" className="mb-3" fill>
                     {leagueData?.remainingSchedule.map((w, index) => <Tab key={index} eventKey={w.week} title={"Week " + w.week}  ><PlayoffMachineMatchupWeek week={w}/> </Tab>)}
                 </Tabs>
-				<PlayoffMachineAdvancedOptions league={leagueData} handlePointsChange={handlePointsChange} />
+				{/* <PlayoffMachineAdvancedOptions league={leagueData} handlePointsChange={handlePointsChange} /> */}
 				<br/><br/><br/>
 				<div>
 					y: Clinched division

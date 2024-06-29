@@ -298,7 +298,7 @@ const headToHeadTiebreaker = (teams: ITeam[], site: Site, tiebreaker: string[], 
     });
 
     //If all teams don't have the same number of games then we can't use head to head
-    if(teamsWithMatchingGames.length !== headToHeadTeams.length){
+    if(teamsWithMatchingGames.length !== headToHeadTeams.length && site !== Site.NFL){
         tiebreaker.push("Head to head tiebreaker cannot be used as all teams don't have the same amount of games against eachother");
         return undefined;
     }
