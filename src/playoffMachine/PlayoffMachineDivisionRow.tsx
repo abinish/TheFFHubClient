@@ -8,16 +8,19 @@ import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 export interface IPlayoffMachineDivisionRowProps {
     team: ITeam;
     isPlayoffTeam: boolean;
+    clinchedDivision: boolean;
+    clinchedPlayoffs: boolean;
+    clinchedElimination: boolean;
 }
 
-export default function PlayoffMachineDivisionRow( {team, isPlayoffTeam}: IPlayoffMachineDivisionRowProps) {
+export default function PlayoffMachineDivisionRow( {team, isPlayoffTeam, clinchedDivision, clinchedPlayoffs, clinchedElimination}: IPlayoffMachineDivisionRowProps) {
 
 
     const renderTooltip = (team: ITeam) => {
         if(team.tiebreakers.length === 0) return (<></>)
 
         return (
-            <OverlayTrigger placement='right' overlay={(props)=> (
+            <OverlayTrigger placement='auto'  overlay={(props)=> (
                 <Tooltip  className='tooltip' id={`tooltip-${team.teamName}`} {...props}>
                         {team.tiebreakers.map((t, i) => 
                             <div  key={i}>
@@ -29,21 +32,35 @@ export default function PlayoffMachineDivisionRow( {team, isPlayoffTeam}: IPlayo
                                 </div>)}
                 </Tooltip>
             )}>
-                <FontAwesomeIcon icon={faInfo} size='sm' className='tiebreakerIcon' />
+                <span>
+                    <FontAwesomeIcon icon={faInfo} size='sm' className='tiebreakerIcon' />
+                </span>
             </OverlayTrigger>
         )
     }   
 
     const getStyle = (isPlayoffTeam: boolean) => {
         if(isPlayoffTeam)
-            return {backgroundColor: '#dff0d8'}
+            return 'playoffTeam'
         
-        return {}
+        return ''
+    }
+
+    const renderClinchPrefix = (clinchedDivision: boolean, clinchedPlayoffs: boolean) => {
+        if(clinchedDivision){
+            return 'y-'
+        }else if(clinchedPlayoffs){
+            return 'x-'
+        }else if (clinchedElimination){
+            return 'e-'
+        }
+
+        return '';
     }
 
     return (
-        <tr style={getStyle(isPlayoffTeam)}>
-            <td>{team.teamName}{renderTooltip(team)}</td>
+        <tr className={getStyle(isPlayoffTeam)}>
+            <td>{renderClinchPrefix(clinchedDivision, clinchedPlayoffs)}{team.teamName}{renderTooltip(team)}</td>
             <td>{team.wins}</td>
             <td>{team.losses}</td>
             <td>{team.ties}</td>

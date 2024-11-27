@@ -27,3 +27,7 @@
     --bs-btn-disabled-border-color: #212529;
     --bs-gradient: none;
 }
+
+.playoffTeam {
+  --bs-table-bg: #dff0d8 !important;
+}

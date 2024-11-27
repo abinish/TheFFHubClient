@@ -18,6 +18,8 @@ export const toolName = (type: LinkType) => {
             return "PowerRankings";
         case LinkType.Scheduler:
             return "ScheduleComparison";
+        case LinkType.LeagueHistory:
+            return "LeagueHistory";
         default:
             return "PlayoffMachine";
     }
@@ -33,6 +35,8 @@ export const toolPrettyName = (type: LinkType) => {
             return "Power Rankings";
         case LinkType.Scheduler:
             return "Schedule Comparison";
+        case LinkType.LeagueHistory:
+            return "League History (slow)";
         default:
             return "Playoff Machine";
     }

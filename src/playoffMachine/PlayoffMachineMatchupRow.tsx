@@ -38,23 +38,24 @@ export default function PlayoffMachineMatchupRow( {matchup}: IPlayoffMachineRowP
                 homeTeam.divisionTies--;
                 awayTeam.divisionTies--;
             }
-            else if(matchup.awayTeamWon){
-                awayTeam.wins--;
-                homeTeam.losses--;
-                if(isDivisionalGame){
-                    awayTeam.divisionWins--;
-                    homeTeam.divisionLosses--;
-                }
-            }
-            else if(matchup.homeTeamWon){
-                awayTeam.losses--;
-                homeTeam.wins--;
-                if(isDivisionalGame){
-                    awayTeam.divisionLosses--;
-                    homeTeam.divisionWins--;
-                }
+        }
+        else if(matchup.awayTeamWon){
+            awayTeam.wins--;
+            homeTeam.losses--;
+            if(isDivisionalGame){
+                awayTeam.divisionWins--;
+                homeTeam.divisionLosses--;
             }
         }
+        else if(matchup.homeTeamWon){
+            awayTeam.losses--;
+            homeTeam.wins--;
+            if(isDivisionalGame){
+                awayTeam.divisionLosses--;
+                homeTeam.divisionWins--;
+            }
+        }
+        
 
         //Set matchup
         if(tie){

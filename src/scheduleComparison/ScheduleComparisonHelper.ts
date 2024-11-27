@@ -35,10 +35,13 @@ export const getScheduleComparisonTeams = (league: ILeagueDetails): IScheduleCom
     teams.forEach(team => {
         //Calculate the weekly results
         weeklyScores.forEach(weeklyScore => {
-            var teamScore = getTeam(team.teamName, teamScheduleLookup).schedule[weeklyScore.week - 1].ownScore;
-            var wins = weeklyScore.scores.filter(score => score < teamScore).length;
-            var ties = weeklyScore.scores.filter(score => score === teamScore).length-1;
-            var losses = weeklyScore.scores.filter(score => score > teamScore).length;
+            var teamScore = getTeam(team.teamName, teamScheduleLookup).schedule.find(schedule => schedule.week === weeklyScore.week)?.ownScore;
+            if(teamScore === undefined){
+                return;
+            }
+            var wins = weeklyScore.scores.filter(score => score < teamScore!).length;
+            var ties = weeklyScore.scores.filter(score => score === teamScore!).length-1;
+            var losses = weeklyScore.scores.filter(score => score > teamScore!).length;
             team.weeklyResults.push({wins: wins, ties: ties, losses: losses});
         });
 
@@ -56,7 +59,11 @@ export const getScheduleComparisonTeams = (league: ILeagueDetails): IScheduleCom
 
             //Go through each of the other teams games and compare to ours
             teamSchedule.schedule.forEach(opponentGame => {
-                var currentTeamScore = currentTeamsSchedule.schedule.find(ourGame => ourGame.week === opponentGame.week)!.ownScore;
+                var currentTeamScore = currentTeamsSchedule.schedule.find(ourGame => ourGame.week === opponentGame.week)?.ownScore;
+
+                if(currentTeamScore === undefined){
+                    return;
+                }
 
                 //If the opponent for the team we are comparing to is the team we are comparing, then keep the result as is.
                 if(opponentGame.opponentTeamName === team.teamName){

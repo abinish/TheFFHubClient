@@ -6,6 +6,7 @@ export interface ILeagueDetails {
     site: string;
     leagueId: string;
     teams: ITeam[];
+    season: string;
 }
 
 export interface ILeagueSettings {
@@ -17,6 +18,7 @@ export interface ILeagueSettings {
     tieRule: number;
     playoffTeams: number;
     divisions: IDivision[];
+    playsLeagueMedian: boolean;
 }
 
 export interface IWeek {
@@ -44,6 +46,7 @@ export interface IDivision {
 export interface ITeam {
     id: number;
     teamName: string;
+    teamManager: string;
     division: string;
     wins: number;
     losses: number;
@@ -74,12 +77,21 @@ export interface ILeagueMetadata {
     userId: string;
     swid: string;
     s2: string;
+    isPrivateLeague: boolean;
+    privateLeagueData: string;
+    privateLeagueDataValidUntil: Date;
+}
+
+export interface IPrivateLeagueData {
+    
 }
 
 export enum Site {
     ESPN =    1,
     Yahoo =   2,
-    Sleeper = 3
+    Sleeper = 3,
+    Fleaflicker = 4,
+    NFL = 5
 }
 
 export interface IHeadToHeadStandingsTeam {
