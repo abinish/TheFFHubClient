@@ -32,7 +32,7 @@ export default function WeeklyRecordTable({
                     </tr>
                 </thead>
                 <tbody>
-                    {teams?.sort((a,b) => getSortValue(a) < getSortValue(b)? 1 : -1).map(t => <WeeklyRecordRow key={t.teamName} team={t} />)}
+                    {teams?.sort((a,b) => getSortValue(a) < getSortValue(b)? 1 : -1).map(t => <WeeklyRecordRow key={t.teamName} team={t} totalWeeks={completedWeeks.length}/>)}
                 </tbody>
             </table>	
 		</div>

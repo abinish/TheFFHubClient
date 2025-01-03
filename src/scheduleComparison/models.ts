@@ -1,8 +1,12 @@
 import { ITeam } from "../models";
 
 export interface IScheduleComparisonTeam extends ITeam {
-    weeklyResults: IComparisonRecord[];
+    weeklyResults: IWeeklyRecord[];
     scheduleComparison: ITeamScheduleComparisonRecord[];
+}
+
+export interface IWeeklyRecord extends IComparisonRecord {
+    week: number;
 }
 
 export interface IComparisonRecord {

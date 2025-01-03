@@ -42,7 +42,7 @@ export const getScheduleComparisonTeams = (league: ILeagueDetails): IScheduleCom
             var wins = weeklyScore.scores.filter(score => score < teamScore!).length;
             var ties = weeklyScore.scores.filter(score => score === teamScore!).length-1;
             var losses = weeklyScore.scores.filter(score => score > teamScore!).length;
-            team.weeklyResults.push({wins: wins, ties: ties, losses: losses});
+            team.weeklyResults.push({week: weeklyScore.week, wins: wins, ties: ties, losses: losses});
         });
 
         //Calculate the schedule comparison

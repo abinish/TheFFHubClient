@@ -2,9 +2,10 @@ import { IScheduleComparisonTeam, IComparisonRecord } from './models';
 
 export interface IWeeklyRecordRowProps {
     team: IScheduleComparisonTeam;
+    totalWeeks: number;
 }
 
-export default function WeeklyRecordRow( {team}: IWeeklyRecordRowProps) {
+export default function WeeklyRecordRow( {team, totalWeeks}: IWeeklyRecordRowProps) {
 
 
     const formatRecordFromWeeklyResult = (weeklyResult: IComparisonRecord) => {
@@ -24,7 +25,14 @@ export default function WeeklyRecordRow( {team}: IWeeklyRecordRowProps) {
     return (
         <tr>
             <td>{team.teamName}</td>
-            {team.weeklyResults.map((weeklyResult, index) => <td key={index} style={{textAlign: 'center'}} >{formatRecordFromWeeklyResult(weeklyResult)}</td>)}
+            {Array.from({ length: totalWeeks }, (_, index) => {
+                const weeklyResult = team.weeklyResults.find(result => result.week === index + 1);
+                return (
+                    <td key={index} style={{ textAlign: 'center' }}>
+                        {weeklyResult ? formatRecordFromWeeklyResult(weeklyResult) : '---'}
+                    </td>
+                );
+            })}
             <td style={{textAlign: 'center'}}>{formatTotalRecord(team.weeklyResults)}</td>
 		</tr>
     )
