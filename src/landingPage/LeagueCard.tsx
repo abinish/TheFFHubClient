@@ -79,6 +79,13 @@ export default function LeagueCard( {league}: ILeagueCardProps) {
 							league.site === 'sleeper' &&
 							<>
 								<br />
+								<FFHubLink league={league} type={LinkType.TradeHistory}/>
+							</>
+						}
+						{
+							league.site === 'sleeper' &&
+							<>
+								<br />
 								<FFHubLink league={league} type={LinkType.LeagueHistory}/>
 							</>
 						}

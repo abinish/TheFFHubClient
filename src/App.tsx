@@ -21,6 +21,7 @@ import { AboutContainer } from './about/AboutContainer';
 import { PlayoffScenariosContainer } from './playoffScenarios/PlayoffScenariosContainer';
 import LeagueHistoryScoringStats from './leagueHistory/LeagueHistoryScoringStats';
 import { LeagueHistoryContainer } from './leagueHistory/LeagueHistoryContainer';
+import { TradeHistoryContainer } from './tradeHistory/TradeHistoryContainer';
 
 function App() {
 
@@ -64,6 +65,7 @@ function App() {
                 <Route path='/LeagueHistory' element={<LeagueHistoryContainer/>} />
                 <Route path='/YahooLeagues' element={<YahooLeaguesContainer/>} />
                 <Route path='/About' element={<AboutContainer/>} />
+                <Route path='/TradeHistory' element={<TradeHistoryContainer/>} />
                 <Route path='/' element={<LandingPageContainer/>} />
               </Routes>
           </Container>

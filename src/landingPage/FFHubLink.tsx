@@ -20,6 +20,8 @@ export const toolName = (type: LinkType) => {
             return "ScheduleComparison";
         case LinkType.LeagueHistory:
             return "LeagueHistory";
+        case LinkType.TradeHistory:
+            return "TradeHistory";
         default:
             return "PlayoffMachine";
     }
@@ -37,6 +39,8 @@ export const toolPrettyName = (type: LinkType) => {
             return "Schedule Comparison";
         case LinkType.LeagueHistory:
             return "League History (slow)";
+        case LinkType.TradeHistory:
+            return "Trade History";
         default:
             return "Playoff Machine";
     }
