@@ -298,7 +298,7 @@ export const TradeHistory: React.FC = () => {
           console.log(`Fetching transactions for league ${currentLeagueId}`);
           
           // Process up to 18 pages of transactions
-          for (let page = 1; page <= 18; page++) {
+          for (let page = 1; page <= 25; page++) {
             try {
               const transactionsResponse = await fetch(`https://api.sleeper.app/v1/league/${currentLeagueId}/transactions/${page}`);
               if (!transactionsResponse.ok) {
