@@ -15,6 +15,7 @@ import { deepCopy } from '../shared/helpers';
 import PlayoffOddsTable from '../playoffOdds/PlayoffOddsTable';
 import { IPlayoffOddsTeam } from '../playoffOdds/models';
 import { getPlayoffOddsTeams } from '../playoffOdds/PlayoffOddsHelper';
+import PlayoffMachineAdvancedOptions from '../playoffMachine/PlayoffMachineAdvancedOptions';
 
 export function PlayoffMachineContainerWithOdds() { 
 	//const history = useHistory();
@@ -248,7 +249,7 @@ export function PlayoffMachineContainerWithOdds() {
 		updateLeagueData(leagueData);
     }
 
-	const handleTiebreakerSettingChange = (site: string, tiebreaker: int) => {
+	const handleTiebreakerSettingChange = (site: string, tiebreaker: number) => {
 		if(leagueData){
 			leagueData.site = site;
 			leagueData.leagueSettings.playoffTiebreakerID = tiebreaker
@@ -280,7 +281,7 @@ export function PlayoffMachineContainerWithOdds() {
                 <Tabs id="test" className="mb-3" fill>
                     {leagueData?.remainingSchedule.map((w, index) => <Tab key={index} eventKey={w.week} title={"Week " + w.week}  ><PlayoffMachineMatchupWeek week={w}/> </Tab>)}
                 </Tabs>
-				{/* <PlayoffMachineAdvancedOptions league={leagueData} handlePointsChange={handlePointsChange} /> */}
+				<PlayoffMachineAdvancedOptions league={leagueData} handlePointsChange={handlePointsChange} handleTiebreakerSettingChange={handleTiebreakerSettingChange} />
 				<br/><br/><br/>
 				<div>
 					y: Clinched division
