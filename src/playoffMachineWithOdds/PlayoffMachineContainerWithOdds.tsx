@@ -5,16 +5,18 @@ import { useSearchParams } from 'react-router-dom';
 import { getLeagueDetails } from '../leagueApi';
 import update from 'immutability-helper'
 import { PlayoffMachineContext } from '../Contexts/PlayoffMachineContexts';
-import PlayoffMachineDivision from './PlayoffMachineDivision';
-import PlayoffMachineMatchupWeek from './PlayoffMachineMatchupWeek';
+import PlayoffMachineDivision from '../playoffMachine/PlayoffMachineDivision';
+import PlayoffMachineMatchupWeek from '../playoffMachine/PlayoffMachineMatchupWeek';
 import { Button, Tab, Tabs } from 'react-bootstrap';
 import { orderStandings } from '../shared/orderStandingsHelper';
 import { Loading } from '../shared/loading';
 import { LeagueContext } from '../Contexts/LeagueContexts';
 import { deepCopy } from '../shared/helpers';
-import PlayoffMachineAdvancedOptions from './PlayoffMachineAdvancedOptions';
+import PlayoffOddsTable from '../playoffOdds/PlayoffOddsTable';
+import { IPlayoffOddsTeam } from '../playoffOdds/models';
+import { getPlayoffOddsTeams } from '../playoffOdds/PlayoffOddsHelper';
 
-export function PlayoffMachineContainer() { 
+export function PlayoffMachineContainerWithOdds() { 
 	//const history = useHistory();
 	// const listUrl = React.useMemo(() => pathname.substring(0, pathname.lastIndexOf('/')), [pathname]);
 	// const initAreaId = React.useMemo(() => {
@@ -24,6 +26,7 @@ export function PlayoffMachineContainer() {
 	// }, [search]);
     const leagues = React.useContext(LeagueDataContext);
     const leaguesMetadata = React.useContext(LeagueContext);
+	const [playoffOddsTeams, setPlayoffOddsTeams] = React.useState<IPlayoffOddsTeam[]>();
     const [leagueData, setLeagueData] = React.useState<ILeagueDetails>();
     const [tabValue, setTabValue] = React.useState(0);
     const [searchParams] = useSearchParams();
@@ -54,6 +57,23 @@ export function PlayoffMachineContainer() {
 		}
 	}
 
+	const hasEnoughData = () => {
+
+		if((leagueData?.completedSchedule.length ?? 0) >= 4){
+			return true;
+		}
+		return false;
+	}
+
+	const updateLeagueData =  (league: ILeagueDetails) => {
+		const leagueToUse = deepCopy(league);
+		setLeagueData(leagueToUse);
+		orderStandings(leagueToUse);
+		var playoffOddsTeamsTemp = getPlayoffOddsTeams(leagueToUse, 10000);
+		if(playoffOddsTeamsTemp)
+			setPlayoffOddsTeams(playoffOddsTeamsTemp);
+	}
+
 	React.useEffect(() => {
 		const fetchData = async () => {
 			
@@ -70,14 +90,10 @@ export function PlayoffMachineContainer() {
             //Deep copy league
             var clonedLeague= JSON.parse(JSON.stringify(league));
 
-            orderStandings(clonedLeague);
-            setLeagueData(clonedLeague);
-
+            updateLeagueData(clonedLeague);
         }
         fetchData();
     }, []);
-
-    
 
 	const setMatchupsByWinningPercentage = () => {
 		leagueData?.remainingSchedule.forEach(w => {
@@ -222,21 +238,32 @@ export function PlayoffMachineContainer() {
         matchup.tie = tie;
         matchup.homeTeamWon = homeTeamWon;
         if(leagueData){
-            orderStandings(leagueData);            
-            setLeagueData(deepCopy(leagueData));
+            updateLeagueData(leagueData);
         }
 
     }
 
 	const handlePointsChange = (team: ITeam, pointsFor: number) => {
         leagueData.teams.find((t) => t.teamName === team.teamName)!.pointsFor = pointsFor;
-		orderStandings(leagueData);
-		setLeagueData(deepCopy(leagueData));
+		updateLeagueData(leagueData);
     }
+
+	const handleTiebreakerSettingChange = (site: string, tiebreaker: int) => {
+		if(leagueData){
+			leagueData.site = site;
+			leagueData.leagueSettings.playoffTiebreakerID = tiebreaker
+			updateLeagueData(leagueData);
+		}
+	}
 
 
 
 	return <PlayoffMachineContext.Provider value={{leagueData, setLeagueData}}>
+				{ hasEnoughData() && playoffOddsTeams&&
+								<PlayoffOddsTable teams={playoffOddsTeams} playoffTeams={leagueData?.leagueSettings.playoffTeams || 0} />
+							}
+						
+							
                 <div style={{display:'flex'}}>
                     {leagueData?.leagueSettings.divisions.map((d,index) => <div key={index} style={{flex: 1, paddingRight:'1rem'}}><PlayoffMachineDivision key={d.name} division={d} teams={leagueData?.teams} playoffTeams={leagueData.leagueSettings.playoffTeams} remainingSchedule={leagueData?.remainingSchedule}/></div> )}
                 </div>
