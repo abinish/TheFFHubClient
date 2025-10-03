@@ -17,7 +17,7 @@ import { IPlayoffOddsTeam } from '../playoffOdds/models';
 import { getPlayoffOddsTeams } from '../playoffOdds/PlayoffOddsHelper';
 import PlayoffMachineAdvancedOptions from '../playoffMachine/PlayoffMachineAdvancedOptions';
 
-export function PlayoffMachineContainerWithOdds() { 
+export function PlayoffTool() { 
 	//const history = useHistory();
 	// const listUrl = React.useMemo(() => pathname.substring(0, pathname.lastIndexOf('/')), [pathname]);
 	// const initAreaId = React.useMemo(() => {
@@ -103,13 +103,13 @@ export function PlayoffMachineContainerWithOdds() {
 				var awayTeam = leagueData?.teams.find((team) => team.teamName === m.awayTeamName)!;
 				var homeTeam = leagueData?.teams.find((team) => team.teamName === m.homeTeamName)!;
 				if((awayTeam.wins + (0.5*awayTeam.ties)) > (homeTeam.wins + (0.5*homeTeam.ties))){
-					handleMatchup(m, true, false, false)
+					handleMatchup(m, true, false, false, true)
 				}
 				else if((homeTeam.wins + (0.5*homeTeam.ties)) > (awayTeam.wins + (0.5*awayTeam.ties))){
-					handleMatchup(m, false, false, true)
+					handleMatchup(m, false, false, true, true)
 				}
 				else{
-					handleMatchup(m, false, true, false)
+					handleMatchup(m, false, true, false, true)
 				}
 			});
 		});
@@ -122,13 +122,13 @@ export function PlayoffMachineContainerWithOdds() {
 				var awayTeam = leagueData?.teams.find((team) => team.teamName === m.awayTeamName)!;
 				var homeTeam = leagueData?.teams.find((team) => team.teamName === m.homeTeamName)!;
 				if(awayTeam.pointsFor > homeTeam.pointsFor){
-					handleMatchup(m, true, false, false)
+					handleMatchup(m, true, false, false, true)
 				}
 				else if(homeTeam.pointsFor > awayTeam.pointsFor){
-					handleMatchup(m, false, false, true)
+					handleMatchup(m, false, false, true, true)
 				}
 				else{
-					handleMatchup(m, false, true, false)
+					handleMatchup(m, false, true, false, true)
 				}
 			});
 		});
@@ -137,7 +137,7 @@ export function PlayoffMachineContainerWithOdds() {
 	const setMatchupsToAway = () => {
 		leagueData?.remainingSchedule.forEach(w => {
 			w.matchups.forEach(m => {
-				handleMatchup(m, true, false, false)
+				handleMatchup(m, true, false, false,true)
 			});
 		});
 	};
@@ -145,7 +145,7 @@ export function PlayoffMachineContainerWithOdds() {
 	const setMatchupsToHome = () => {
 		leagueData?.remainingSchedule.forEach(w => {
 			w.matchups.forEach(m => {
-				handleMatchup(m, false, false, true)
+				handleMatchup(m, false, false, true, true)
 			});
 		});
 	};
@@ -153,7 +153,7 @@ export function PlayoffMachineContainerWithOdds() {
 	const clearAllMatchupSelections = () => {
 		leagueData?.remainingSchedule.forEach(w => {
 			w.matchups.forEach(m => {
-				handleMatchup(m, false, false, false)
+				handleMatchup(m, false, false, false, true)
 			});
 		});
 	};
@@ -170,7 +170,7 @@ export function PlayoffMachineContainerWithOdds() {
 	//}
 
 
-	const  handleMatchup = (matchup: IMatchupItem, awayTeamWon: boolean, tie: boolean, homeTeamWon: boolean) => {
+	const  handleMatchup = (matchup: IMatchupItem, awayTeamWon: boolean, tie: boolean, homeTeamWon: boolean, delayLeagueProcessing: boolean) => {
         if((matchup.awayTeamWon && awayTeamWon) || (matchup.tie && tie) || (matchup.homeTeamWon && homeTeamWon))
             return;
 
@@ -238,7 +238,7 @@ export function PlayoffMachineContainerWithOdds() {
         matchup.awayTeamWon = awayTeamWon;
         matchup.tie = tie;
         matchup.homeTeamWon = homeTeamWon;
-        if(leagueData){
+        if(leagueData && !delayLeagueProcessing){
             updateLeagueData(leagueData);
         }
 
