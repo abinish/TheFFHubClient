@@ -73,6 +73,31 @@ const simluateRestOfSeason = (league: ILeagueDetails, playoffOddsTeams: IPlayoff
 			var homeTeamScore = homeTeam.averageScore + random() * homeTeam.standardDeviation;
 			var awayTeamScore = awayTeam.averageScore + random() * awayTeam.standardDeviation;
 
+			if (matchup.awayTeamWon || matchup.homeTeamWon || matchup.tie) {
+				//Then the playoff machine set this matchup winner and we just need to assign points.
+				if (matchup.awayTeamWon) {
+					if (awayTeamScore < homeTeamScore) {
+						awayTeamScore = homeTeamScore + 1; //Away team wins by 1
+					}
+				} else if (matchup.homeTeamWon) {
+					if (homeTeamScore < awayTeamScore) {
+						homeTeamScore = awayTeamScore + 1; //Home team wins by 1
+					}
+				} else { //Tie
+					const highestScore = Math.max(awayTeamScore, homeTeamScore);
+					homeTeamScore = highestScore;
+					awayTeamScore = highestScore;
+				}
+
+				homeTeam.pointsFor += homeTeamScore;
+				homeTeam.pointsAgainst += awayTeamScore;
+				awayTeam.pointsFor += awayTeamScore;
+				awayTeam.pointsAgainst += homeTeamScore;
+				return;
+			}
+
+			
+
 			homeTeam.pointsFor += homeTeamScore;
 			homeTeam.pointsAgainst += awayTeamScore;
 			awayTeam.pointsFor += awayTeamScore;
@@ -129,12 +154,12 @@ const simluateRestOfSeason = (league: ILeagueDetails, playoffOddsTeams: IPlayoff
 }
 
 const runPlayoffOddsCalculation = (league: ILeagueDetails, teams: IPlayoffOddsTeam[], iterations: number) => {
-	var leagueCopy = deepCopy(league);
-	var leagueToUse = deepCopy(league);
-	var teamsCopy = deepCopy(teams);
-	var teamsToUse = deepCopy(teams);
+
+	
 
 	for (var i = 0; i < iterations; i++) {
+		var leagueToUse = deepCopy(league);
+		var teamsToUse = deepCopy(teams);
 		simluateRestOfSeason(leagueToUse, teamsToUse);
 
 		//Based on results, updated the simulatedPlacements for each team with passed in teams object
@@ -144,9 +169,5 @@ const runPlayoffOddsCalculation = (league: ILeagueDetails, teams: IPlayoffOddsTe
 			var matchedTeam = leagueToUse.teams.find(t => t.teamName === team.teamName)!;
 			team.simulatedPlacements[matchedTeam.overallRank - 1] += 1.0 / iterations * 100;
 		});
-
-		//Reset league and teams for next iteration
-		leagueToUse = leagueCopy;
-		teamsToUse = teamsCopy;
 	}
 }

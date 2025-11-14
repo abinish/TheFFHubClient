@@ -5,16 +5,19 @@ import { useSearchParams } from 'react-router-dom';
 import { getLeagueDetails } from '../leagueApi';
 import update from 'immutability-helper'
 import { PlayoffMachineContext } from '../Contexts/PlayoffMachineContexts';
-import PlayoffMachineDivision from './PlayoffMachineDivision';
-import PlayoffMachineMatchupWeek from './PlayoffMachineMatchupWeek';
-import { Button, Tab, Tabs } from 'react-bootstrap';
+import PlayoffMachineDivision from '../playoffMachine/PlayoffMachineDivision';
+import PlayoffMachineMatchupWeek from '../playoffMachine/PlayoffMachineMatchupWeek';
+import { Alert, Button, Tab, Tabs } from 'react-bootstrap';
 import { orderStandings } from '../shared/orderStandingsHelper';
 import { Loading } from '../shared/loading';
 import { LeagueContext } from '../Contexts/LeagueContexts';
 import { deepCopy } from '../shared/helpers';
-import PlayoffMachineAdvancedOptions from './PlayoffMachineAdvancedOptions';
+import PlayoffOddsTable from '../playoffOdds/PlayoffOddsTable';
+import { IPlayoffOddsTeam } from '../playoffOdds/models';
+import { getPlayoffOddsTeams } from '../playoffOdds/PlayoffOddsHelper';
+import PlayoffMachineAdvancedOptions from '../playoffMachine/PlayoffMachineAdvancedOptions';
 
-export function PlayoffMachineContainer() { 
+export function PlayoffTool() { 
 	//const history = useHistory();
 	// const listUrl = React.useMemo(() => pathname.substring(0, pathname.lastIndexOf('/')), [pathname]);
 	// const initAreaId = React.useMemo(() => {
@@ -24,6 +27,7 @@ export function PlayoffMachineContainer() {
 	// }, [search]);
     const leagues = React.useContext(LeagueDataContext);
     const leaguesMetadata = React.useContext(LeagueContext);
+	const [playoffOddsTeams, setPlayoffOddsTeams] = React.useState<IPlayoffOddsTeam[]>();
     const [leagueData, setLeagueData] = React.useState<ILeagueDetails>();
     const [tabValue, setTabValue] = React.useState(0);
     const [searchParams] = useSearchParams();
@@ -54,6 +58,23 @@ export function PlayoffMachineContainer() {
 		}
 	}
 
+	const hasEnoughData = () => {
+
+		if((leagueData?.completedSchedule.length ?? 0) >= 4){
+			return true;
+		}
+		return false;
+	}
+
+	const updateLeagueData =  (league: ILeagueDetails) => {
+		const leagueToUse = deepCopy(league);
+		setLeagueData(leagueToUse);
+		orderStandings(leagueToUse);
+		var playoffOddsTeamsTemp = getPlayoffOddsTeams(leagueToUse, 10000);
+		if(playoffOddsTeamsTemp)
+			setPlayoffOddsTeams(playoffOddsTeamsTemp);
+	}
+
 	React.useEffect(() => {
 		const fetchData = async () => {
 			
@@ -70,14 +91,10 @@ export function PlayoffMachineContainer() {
             //Deep copy league
             var clonedLeague= JSON.parse(JSON.stringify(league));
 
-            orderStandings(clonedLeague);
-            setLeagueData(clonedLeague);
-
+            updateLeagueData(clonedLeague);
         }
         fetchData();
     }, []);
-
-    
 
 	const setMatchupsByWinningPercentage = () => {
 		leagueData?.remainingSchedule.forEach(w => {
@@ -86,13 +103,13 @@ export function PlayoffMachineContainer() {
 				var awayTeam = leagueData?.teams.find((team) => team.teamName === m.awayTeamName)!;
 				var homeTeam = leagueData?.teams.find((team) => team.teamName === m.homeTeamName)!;
 				if((awayTeam.wins + (0.5*awayTeam.ties)) > (homeTeam.wins + (0.5*homeTeam.ties))){
-					handleMatchup(m, true, false, false)
+					handleMatchup(m, true, false, false, true)
 				}
 				else if((homeTeam.wins + (0.5*homeTeam.ties)) > (awayTeam.wins + (0.5*awayTeam.ties))){
-					handleMatchup(m, false, false, true)
+					handleMatchup(m, false, false, true, true)
 				}
 				else{
-					handleMatchup(m, false, true, false)
+					handleMatchup(m, false, true, false, true)
 				}
 			});
 		});
@@ -105,13 +122,13 @@ export function PlayoffMachineContainer() {
 				var awayTeam = leagueData?.teams.find((team) => team.teamName === m.awayTeamName)!;
 				var homeTeam = leagueData?.teams.find((team) => team.teamName === m.homeTeamName)!;
 				if(awayTeam.pointsFor > homeTeam.pointsFor){
-					handleMatchup(m, true, false, false)
+					handleMatchup(m, true, false, false, true)
 				}
 				else if(homeTeam.pointsFor > awayTeam.pointsFor){
-					handleMatchup(m, false, false, true)
+					handleMatchup(m, false, false, true, true)
 				}
 				else{
-					handleMatchup(m, false, true, false)
+					handleMatchup(m, false, true, false, true)
 				}
 			});
 		});
@@ -120,7 +137,7 @@ export function PlayoffMachineContainer() {
 	const setMatchupsToAway = () => {
 		leagueData?.remainingSchedule.forEach(w => {
 			w.matchups.forEach(m => {
-				handleMatchup(m, true, false, false)
+				handleMatchup(m, true, false, false,true)
 			});
 		});
 	};
@@ -128,7 +145,7 @@ export function PlayoffMachineContainer() {
 	const setMatchupsToHome = () => {
 		leagueData?.remainingSchedule.forEach(w => {
 			w.matchups.forEach(m => {
-				handleMatchup(m, false, false, true)
+				handleMatchup(m, false, false, true, true)
 			});
 		});
 	};
@@ -136,7 +153,7 @@ export function PlayoffMachineContainer() {
 	const clearAllMatchupSelections = () => {
 		leagueData?.remainingSchedule.forEach(w => {
 			w.matchups.forEach(m => {
-				handleMatchup(m, false, false, false)
+				handleMatchup(m, false, false, false, true)
 			});
 		});
 	};
@@ -153,7 +170,7 @@ export function PlayoffMachineContainer() {
 	//}
 
 
-	const  handleMatchup = (matchup: IMatchupItem, awayTeamWon: boolean, tie: boolean, homeTeamWon: boolean) => {
+	const  handleMatchup = (matchup: IMatchupItem, awayTeamWon: boolean, tie: boolean, homeTeamWon: boolean, delayLeagueProcessing: boolean) => {
         if((matchup.awayTeamWon && awayTeamWon) || (matchup.tie && tie) || (matchup.homeTeamWon && homeTeamWon))
             return;
 
@@ -221,48 +238,46 @@ export function PlayoffMachineContainer() {
         matchup.awayTeamWon = awayTeamWon;
         matchup.tie = tie;
         matchup.homeTeamWon = homeTeamWon;
-        if(leagueData){
-            orderStandings(leagueData);            
-            setLeagueData(deepCopy(leagueData));
+        if(leagueData && !delayLeagueProcessing){
+            updateLeagueData(leagueData);
         }
 
     }
 
 	const handlePointsChange = (team: ITeam, pointsFor: number) => {
         leagueData.teams.find((t) => t.teamName === team.teamName)!.pointsFor = pointsFor;
-		orderStandings(leagueData);
-		setLeagueData(deepCopy(leagueData));
+		updateLeagueData(leagueData);
     }
 
 	const handleTiebreakerSettingChange = (site: string, tiebreaker: number) => {
 		if(leagueData){
 			leagueData.site = site;
 			leagueData.leagueSettings.playoffTiebreakerID = tiebreaker
-			orderStandings(leagueData);
-			setLeagueData(deepCopy(leagueData));
+			updateLeagueData(leagueData);
 		}
 	}
 
 
-	return <PlayoffMachineContext.Provider value={{leagueData, setLeagueData}}>
+
+	return <PlayoffMachineContext.Provider value={{leagueData, setLeagueData: updateLeagueData}}>
+		
+				<Alert key='warning' variant={'warning'} dismissible>
+					Tiebreakers shown in standings are only valid for this moment in time.  The playoff odds will simulate scores (including ensuring the selected winners/losers have appropriate winning/losing scores based on simulation scores) and as such, you may see a team with higher playoff odds despite being shown as losing a tiebreaker in the standings.
+				</Alert>
+				{ hasEnoughData() && playoffOddsTeams&&
+								<PlayoffOddsTable teams={playoffOddsTeams} playoffTeams={leagueData?.leagueSettings.playoffTeams || 0} />
+							}
+						
+							
                 <div style={{display:'flex'}}>
                     {leagueData?.leagueSettings.divisions.map((d,index) => <div key={index} style={{flex: 1, paddingRight:'1rem'}}><PlayoffMachineDivision key={d.name} division={d} teams={leagueData?.teams} playoffTeams={leagueData.leagueSettings.playoffTeams} remainingSchedule={leagueData?.remainingSchedule}/></div> )}
                 </div>
-				<div>
-					Quick select winners (will override all selections):
-					
-					<Button style={{margin: '5px'}} variant="outline-dark" onClick={setMatchupsByWinningPercentage}>By Winning %</Button>
-					<Button style={{margin: '5px'}} variant="outline-dark" onClick={setMatchupsByPointsFor}>By Points For</Button>
-					<Button style={{margin: '5px'}} variant='outline-dark' onClick={() => setMatchupsToAway()}>All Away</Button>
-					<Button style={{margin: '5px'}} variant="outline-dark" onClick={setMatchupsToHome}>All Home</Button>
-					<Button style={{margin: '5px'}} variant="outline-dark" onClick={clearAllMatchupSelections}>Clear All Selections</Button>
-				</div>
+				<PlayoffMachineAdvancedOptions league={leagueData} handlePointsChange={handlePointsChange} handleTiebreakerSettingChange={handleTiebreakerSettingChange} />
+				
 				<br/>
                 <Tabs id="test" className="mb-3" fill>
                     {leagueData?.remainingSchedule.map((w, index) => <Tab key={index} eventKey={w.week} title={"Week " + w.week}  ><PlayoffMachineMatchupWeek week={w}/> </Tab>)}
                 </Tabs>
-				<br/>
-				<PlayoffMachineAdvancedOptions league={leagueData} handlePointsChange={handlePointsChange} handleTiebreakerSettingChange={handleTiebreakerSettingChange} />
 				<br/><br/><br/>
 				<div>
 					y: Clinched division

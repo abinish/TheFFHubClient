@@ -22,6 +22,8 @@ import { PlayoffScenariosContainer } from './playoffScenarios/PlayoffScenariosCo
 import LeagueHistoryScoringStats from './leagueHistory/LeagueHistoryScoringStats';
 import { LeagueHistoryContainer } from './leagueHistory/LeagueHistoryContainer';
 import { TradeHistoryContainer } from './tradeHistory/TradeHistoryContainer';
+import { PlayoffTool } from './playoffTool/PlayoffTool';
+import { GuillotineContainer } from './guillotine/GuillotineContainer';
 
 function App() {
 
@@ -66,6 +68,8 @@ function App() {
                 <Route path='/YahooLeagues' element={<YahooLeaguesContainer/>} />
                 <Route path='/About' element={<AboutContainer/>} />
                 <Route path='/TradeHistory' element={<TradeHistoryContainer/>} />
+                <Route path ='/PlayoffTool' element ={<PlayoffTool/>} />
+                <Route path='/Guillotine' element={<GuillotineContainer/>} />
                 <Route path='/' element={<LandingPageContainer/>} />
               </Routes>
           </Container>

@@ -1,4 +1,4 @@
-import { ILeagueDetails, ILeagueMetadata, Site } from './models';
+import { ILeagueMetadata, IGuillotineLeague, ILeagueDetails, Site, IGuillotineSummaryResponse } from './models';
 
 export async function verifyLeagueExists( parameters: {
     site: string,
@@ -133,4 +133,10 @@ export function convertSiteToText(site: Site){
         default:
             return "";
     }
+}
+
+export async function getGuillotineData() {
+    const response = await fetch(`https://api.theffhub.com/api/guillotine`);
+    checkStatus(response);
+    return await response.json() as IGuillotineSummaryResponse;
 }

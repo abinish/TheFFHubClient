@@ -15,6 +15,7 @@ export default function NavBar() {
 			<Navbar.Collapse id="basic-navbar-nav">
 			<Nav className="navbar-nav">
 				<Nav.Link  as={Link} to="/About">About</Nav.Link>
+				<Nav.Link  as={Link} to="/guillotine">Guillotine</Nav.Link>
 
 			</Nav>
 			</Navbar.Collapse> 
