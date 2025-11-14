@@ -99,7 +99,7 @@ export default function PlayoffMachineAdvancedOptions( {league, handlePointsChan
     <Accordion defaultActiveKey="1">
         <Accordion.Item eventKey="0">
             <Accordion.Header as={Card.Header}>
-            Advanced Options
+            Advanced Options (Beta)
             </Accordion.Header>
             <Accordion.Body>
                 <h5 style={{ marginBottom: '15px', color: '#495057', borderBottom: '1px solid #dee2e6', paddingBottom: '5px' }}>

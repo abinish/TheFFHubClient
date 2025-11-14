@@ -22,6 +22,8 @@ export const toolName = (type: LinkType) => {
             return "LeagueHistory";
         case LinkType.TradeHistory:
             return "TradeHistory";
+        case LinkType.PlayoffTool:
+            return "PlayoffTool";
         default:
             return "PlayoffMachine";
     }
@@ -41,6 +43,8 @@ export const toolPrettyName = (type: LinkType) => {
             return "League History (slow)";
         case LinkType.TradeHistory:
             return "Trade History";
+        case LinkType.PlayoffTool:
+            return "Playoff Machine + Odds (Beta)";
         default:
             return "Playoff Machine";
     }

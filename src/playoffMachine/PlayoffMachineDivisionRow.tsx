@@ -20,19 +20,30 @@ export default function PlayoffMachineDivisionRow( {team, isPlayoffTeam, clinche
         if(team.tiebreakers.length === 0) return (<></>)
 
         return (
-            <OverlayTrigger placement='auto'  overlay={(props)=> (
-                <Tooltip  className='tooltip' id={`tooltip-${team.teamName}`} {...props}>
+            <OverlayTrigger 
+                placement='auto'
+                overlay={(props)=> (
+                    <Tooltip className='tooltip' id={`tooltip-${team.teamName}`} {...props}>
                         {team.tiebreakers.map((t, i) => 
-                            <div  key={i}>
+                            <div key={i}>
                                 {t.map((x,y)=> 
                                     <div key={y} style={{fontSize: 12, whiteSpace: 'nowrap', textAlign:'left'}}>
                                         {x}
                                     </div>)}
                                     <br/>
                                 </div>)}
-                </Tooltip>
-            )}>
-                <span>
+                    </Tooltip>
+                )}
+            >
+                <span style={{ 
+                    display: 'inline-flex', 
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    padding: '2px 6px',
+                    cursor: 'help',
+                    minWidth: '20px',
+                    minHeight: '20px'
+                }}>
                     <FontAwesomeIcon icon={faInfo} size='sm' className='tiebreakerIcon' />
                 </span>
             </OverlayTrigger>

@@ -4,5 +4,6 @@ export enum LinkType {
 	PlayoffOdds     = 2,
 	Scheduler       = 3,
 	LeagueHistory = 4,
-	TradeHistory = 5
+	TradeHistory = 5,
+	PlayoffTool = 6
 }

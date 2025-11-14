@@ -74,6 +74,8 @@ export default function LeagueCard( {league}: ILeagueCardProps) {
 						<br />
 						<FFHubLink league={league} type={LinkType.PlayoffOdds}/>
 						<br />
+						<FFHubLink league={league} type={LinkType.PlayoffTool}/>
+						<br />
 						<FFHubLink league={league} type={LinkType.Scheduler}/>
 						{
 							league.site === 'sleeper' &&

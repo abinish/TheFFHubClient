@@ -7,7 +7,7 @@ import update from 'immutability-helper'
 import { PlayoffMachineContext } from '../Contexts/PlayoffMachineContexts';
 import PlayoffMachineDivision from '../playoffMachine/PlayoffMachineDivision';
 import PlayoffMachineMatchupWeek from '../playoffMachine/PlayoffMachineMatchupWeek';
-import { Button, Tab, Tabs } from 'react-bootstrap';
+import { Alert, Button, Tab, Tabs } from 'react-bootstrap';
 import { orderStandings } from '../shared/orderStandingsHelper';
 import { Loading } from '../shared/loading';
 import { LeagueContext } from '../Contexts/LeagueContexts';
@@ -259,7 +259,11 @@ export function PlayoffTool() {
 
 
 
-	return <PlayoffMachineContext.Provider value={{leagueData, setLeagueData}}>
+	return <PlayoffMachineContext.Provider value={{leagueData, setLeagueData: updateLeagueData}}>
+		
+				<Alert key='warning' variant={'warning'} dismissible>
+					Tiebreakers shown in standings are only valid for this moment in time.  The playoff odds will simulate scores (including ensuring the selected winners/losers have appropriate winning/losing scores based on simulation scores) and as such, you may see a team with higher playoff odds despite being shown as losing a tiebreaker in the standings.
+				</Alert>
 				{ hasEnoughData() && playoffOddsTeams&&
 								<PlayoffOddsTable teams={playoffOddsTeams} playoffTeams={leagueData?.leagueSettings.playoffTeams || 0} />
 							}
@@ -268,20 +272,12 @@ export function PlayoffTool() {
                 <div style={{display:'flex'}}>
                     {leagueData?.leagueSettings.divisions.map((d,index) => <div key={index} style={{flex: 1, paddingRight:'1rem'}}><PlayoffMachineDivision key={d.name} division={d} teams={leagueData?.teams} playoffTeams={leagueData.leagueSettings.playoffTeams} remainingSchedule={leagueData?.remainingSchedule}/></div> )}
                 </div>
-				<div>
-					Quick select winners (will override all selections):
-					
-					<Button style={{margin: '5px'}} variant="outline-dark" onClick={setMatchupsByWinningPercentage}>By Winning %</Button>
-					<Button style={{margin: '5px'}} variant="outline-dark" onClick={setMatchupsByPointsFor}>By Points For</Button>
-					<Button style={{margin: '5px'}} variant='outline-dark' onClick={() => setMatchupsToAway()}>All Away</Button>
-					<Button style={{margin: '5px'}} variant="outline-dark" onClick={setMatchupsToHome}>All Home</Button>
-					<Button style={{margin: '5px'}} variant="outline-dark" onClick={clearAllMatchupSelections}>Clear All Selections</Button>
-				</div>
+				<PlayoffMachineAdvancedOptions league={leagueData} handlePointsChange={handlePointsChange} handleTiebreakerSettingChange={handleTiebreakerSettingChange} />
+				
 				<br/>
                 <Tabs id="test" className="mb-3" fill>
                     {leagueData?.remainingSchedule.map((w, index) => <Tab key={index} eventKey={w.week} title={"Week " + w.week}  ><PlayoffMachineMatchupWeek week={w}/> </Tab>)}
                 </Tabs>
-				<PlayoffMachineAdvancedOptions league={leagueData} handlePointsChange={handlePointsChange} handleTiebreakerSettingChange={handleTiebreakerSettingChange} />
 				<br/><br/><br/>
 				<div>
 					y: Clinched division

@@ -234,6 +234,14 @@ export function PlayoffMachineContainer() {
 		setLeagueData(deepCopy(leagueData));
     }
 
+	const handleTiebreakerSettingChange = (site: string, tiebreaker: number) => {
+		if(leagueData){
+			leagueData.site = site;
+			leagueData.leagueSettings.playoffTiebreakerID = tiebreaker
+			orderStandings(leagueData);
+			setLeagueData(deepCopy(leagueData));
+		}
+	}
 
 
 	return <PlayoffMachineContext.Provider value={{leagueData, setLeagueData}}>
@@ -253,7 +261,8 @@ export function PlayoffMachineContainer() {
                 <Tabs id="test" className="mb-3" fill>
                     {leagueData?.remainingSchedule.map((w, index) => <Tab key={index} eventKey={w.week} title={"Week " + w.week}  ><PlayoffMachineMatchupWeek week={w}/> </Tab>)}
                 </Tabs>
-				{/* <PlayoffMachineAdvancedOptions league={leagueData} handlePointsChange={handlePointsChange} /> */}
+				<br/>
+				<PlayoffMachineAdvancedOptions league={leagueData} handlePointsChange={handlePointsChange} handleTiebreakerSettingChange={handleTiebreakerSettingChange} />
 				<br/><br/><br/>
 				<div>
 					y: Clinched division
