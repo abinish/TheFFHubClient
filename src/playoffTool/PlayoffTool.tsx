@@ -259,34 +259,89 @@ export function PlayoffTool() {
 
 
 
-	return <PlayoffMachineContext.Provider value={{leagueData, setLeagueData: updateLeagueData}}>
-		
-				<Alert key='warning' variant={'warning'} dismissible>
-					Tiebreakers shown in standings are only valid for this moment in time.  The playoff odds will simulate scores (including ensuring the selected winners/losers have appropriate winning/losing scores based on simulation scores) and as such, you may see a team with higher playoff odds despite being shown as losing a tiebreaker in the standings.
-				</Alert>
-				{ hasEnoughData() && playoffOddsTeams&&
-								<PlayoffOddsTable teams={playoffOddsTeams} playoffTeams={leagueData?.leagueSettings.playoffTeams || 0} />
-							}
-						
-							
-                <div style={{display:'flex'}}>
-                    {leagueData?.leagueSettings.divisions.map((d,index) => <div key={index} style={{flex: 1, paddingRight:'1rem'}}><PlayoffMachineDivision key={d.name} division={d} teams={leagueData?.teams} playoffTeams={leagueData.leagueSettings.playoffTeams} remainingSchedule={leagueData?.remainingSchedule}/></div> )}
-                </div>
-				<PlayoffMachineAdvancedOptions league={leagueData} handlePointsChange={handlePointsChange} handleTiebreakerSettingChange={handleTiebreakerSettingChange} />
-				
+	const renderStandingsContent = () => (
+		<>
+			<Alert key='warning' variant={'warning'} dismissible>
+				Tiebreakers shown in standings are only valid for this moment in time.  The playoff odds will simulate scores (including ensuring the selected winners/losers have appropriate winning/losing scores based on simulation scores) and as such, you may see a team with higher playoff odds despite being shown as losing a tiebreaker in the standings.
+			</Alert>
+			<div style={{display:'flex'}}>
+				{leagueData?.leagueSettings.divisions.map((d,index) => <div key={index} style={{flex: 1, paddingRight:'1rem'}}><PlayoffMachineDivision key={d.name} division={d} teams={leagueData?.teams} playoffTeams={leagueData.leagueSettings.playoffTeams} remainingSchedule={leagueData?.remainingSchedule}/></div> )}
+			</div>
+		</>
+	);
+
+	const renderOddsContent = () => (
+		<>
+			
+			{playoffOddsTeams && (
+				<PlayoffOddsTable teams={playoffOddsTeams} playoffTeams={leagueData?.leagueSettings.playoffTeams || 0} />
+			)}
+		</>
+	);
+
+	const renderOddsAndStandingsContent = () => (
+		<>
+			<Alert key='warning' variant={'warning'} dismissible>
+				Tiebreakers shown in standings are only valid for this moment in time.  The playoff odds will simulate scores (including ensuring the selected winners/losers have appropriate winning/losing scores based on simulation scores) and as such, you may see a team with higher playoff odds despite being shown as losing a tiebreaker in the standings.
+			</Alert>
+			{playoffOddsTeams && (
+				<PlayoffOddsTable teams={playoffOddsTeams} playoffTeams={leagueData?.leagueSettings.playoffTeams || 0} />
+			)}
+			<br/>
+			<div style={{display:'flex'}}>
+				{leagueData?.leagueSettings.divisions.map((d,index) => <div key={index} style={{flex: 1, paddingRight:'1rem'}}><PlayoffMachineDivision key={d.name} division={d} teams={leagueData?.teams} playoffTeams={leagueData.leagueSettings.playoffTeams} remainingSchedule={leagueData?.remainingSchedule}/></div> )}
+			</div>
+		</>
+	);
+
+	const renderMatchupSelectionAndAdvancedOptions = () => (
+		<>
+			<PlayoffMachineAdvancedOptions league={leagueData} handlePointsChange={handlePointsChange} handleTiebreakerSettingChange={handleTiebreakerSettingChange} />
+			
+			<br/>
+			<Tabs id="matchup-weeks" className="mb-3" fill>
+				{leagueData?.remainingSchedule.map((w, index) => <Tab key={index} eventKey={w.week} title={"Week " + w.week}  ><PlayoffMachineMatchupWeek week={w}/> </Tab>)}
+			</Tabs>
+			<br/><br/><br/>
+			<div>
+				y: Clinched division
 				<br/>
-                <Tabs id="test" className="mb-3" fill>
-                    {leagueData?.remainingSchedule.map((w, index) => <Tab key={index} eventKey={w.week} title={"Week " + w.week}  ><PlayoffMachineMatchupWeek week={w}/> </Tab>)}
-                </Tabs>
-				<br/><br/><br/>
-				<div>
-					y: Clinched division
-					<br/>
-					x: Clinched playoffs
-					<br/>
-					e: Eliminated from playoffs
-					<br/>
-					Clinching criteria are purely on record.  Tiebreakers are not considered for clinching.  Clinching is purely based on mathematical clinching/elimination.  Future matchups are not considered.
-				</div>
-        </PlayoffMachineContext.Provider>;
+				x: Clinched playoffs
+				<br/>
+				e: Eliminated from playoffs
+				<br/>
+				Clinching criteria are purely on record.  Tiebreakers are not considered for clinching.  Clinching is purely based on mathematical clinching/elimination.  Future matchups are not considered.
+			</div>
+		</>
+	);
+
+	return (
+		<PlayoffMachineContext.Provider value={{leagueData, setLeagueData: updateLeagueData}}>
+			{hasEnoughData() && (
+				<Tabs defaultActiveKey="odds-and-standings" id="playoff-tool-tabs" className="mb-3">
+					<Tab eventKey="playoff-odds" title="Playoff Odds">
+						{renderOddsContent()}
+					</Tab>
+					<Tab eventKey="standings" title="Standings">
+						{renderStandingsContent()}
+					</Tab>
+					<Tab eventKey="odds-and-standings" title="Odds & Standings">
+						{renderOddsAndStandingsContent()}
+					</Tab>
+				</Tabs>
+			)}
+			
+			{!hasEnoughData() && (
+				<>
+					<Alert key='insufficient-data' variant={'info'}>
+						<strong>Insufficient Data for Playoff Odds:</strong> At least 4 completed weeks are required to calculate playoff odds. 
+						Currently showing standings only. Complete more weeks to unlock playoff odds calculation.
+					</Alert>
+					{renderStandingsContent()}
+				</>
+			)}
+			
+			{renderMatchupSelectionAndAdvancedOptions()}
+		</PlayoffMachineContext.Provider>
+	);
 }
