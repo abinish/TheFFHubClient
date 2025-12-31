@@ -15,9 +15,16 @@ export const getScheduleComparisonTeams = (league: ILeagueDetails): IScheduleCom
     var weeklyScores: IWeeklyScore[] = [];
 
 
-    //Determine all play
-    league.completedSchedule.forEach(week => {
+    //Sometimes the completed schedules comes back unsorted
+    var sortedCompletedSchedule = [...league.completedSchedule].sort((a, b) => a.week - b.week);
+
+    // Create all weeklyScores entries first in the correct order
+    sortedCompletedSchedule.forEach(week => {
         weeklyScores.push({week: week.week, scores: []});
+    });
+
+    //Determine all play
+    sortedCompletedSchedule.forEach(week => {
         week.matchups.forEach(matchup => {
             weeklyScores[week.week-1].scores.push(matchup.awayTeamScore);
             weeklyScores[week.week-1].scores.push(matchup.homeTeamScore);

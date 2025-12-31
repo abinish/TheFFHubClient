@@ -39,6 +39,7 @@ export default function LeagueCard( {league}: ILeagueCardProps) {
 		var updatedLeagues = JSON.parse(JSON.stringify(leagues.leagues));
 		setLeagues(updatedLeagues);
 		leagues.setLeagues(updatedLeagues);
+		setShowEditModal(false);
 	}
 
     return (
