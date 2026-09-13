@@ -26,6 +26,11 @@ export function AboutContainer() {
 				While we don't plan to charge for any features, you are welcome to support the site if you want at my <a href="https://www.buymeacoffee.com/hqzkyro">buy me a coffee</a> page.
 			</p>
 
+			<h2>Contact</h2>
+			<p>
+				Have feedback, questions, or run into a bug? Reach out to me on Reddit at <a href="https://www.reddit.com/user/justlikepudge">u/justlikepudge</a>.
+			</p>
+
 			<h2>Planned Features (with no timeline)</h2>
 			<ul>
 				<li>Login support</li>

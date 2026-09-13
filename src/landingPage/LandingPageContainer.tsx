@@ -1,7 +1,7 @@
 import { useNavigate, useLocation } from 'react-router';
 //import * as queryString from 'query-string';
 import LeagueList from './LeagueList';
-import RewriteAlert from './RewriteAlert';
+import YahooAlert from './YahooAlert';
 
 export function LandingPageContainer() {
 	let location = useLocation();
@@ -15,7 +15,7 @@ export function LandingPageContainer() {
 	// }
 	return (
 		<>
-			<RewriteAlert/>
+			<YahooAlert/>
 			
 			<LeagueList/>
 		</>
